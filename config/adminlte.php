@@ -347,40 +347,33 @@ return [
             'icon' => 'fas fa-fw fa-lock',
         ],
         [
-            'text' => 'multilevel',
-            'icon' => 'fas fa-fw fa-share',
+            'text' => 'Reportes',
+            'icon' => 'fas fa-fw fa-chart-bar', // He usado un ícono más apropiado para reportes
             'submenu' => [
                 [
-                    'text' => 'level_one',
-                    'url' => '#',
+                    'text' => 'Reportes Ambientales',
+                    'url' => '/reportes/ambientales',
+                    'icon' => 'far fa-circle',
                 ],
                 [
-                    'text' => 'level_one',
-                    'url' => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                        ],
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                            ],
-                        ],
-                    ],
+                    'text' => 'Reportes de Empleados',
+                    'url' => '/reportes/empleados',
+                    'icon' => 'far fa-circle',
                 ],
                 [
-                    'text' => 'level_one',
-                    'url' => '#',
+                    'text' => 'Reportes de Clientes',
+                    'url' => '/reportes/clientes',
+                    'icon' => 'far fa-circle',
+                ],
+                [
+                    'text' => 'Reportes de Recursos del Parque',
+                    'url' => '/reportes/recursos',
+                    'icon' => 'far fa-circle',
+                ],
+                [
+                    'text' => 'Reportes de Eventos Ambientales',
+                    'url' => '/reportes/eventos',
+                    'icon' => 'far fa-circle',
                 ],
             ],
         ],
