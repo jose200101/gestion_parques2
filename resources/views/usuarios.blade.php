@@ -22,8 +22,12 @@
             <h1 class="text-primary">Listado de Usuarios</h1>
 
             <!-- Botón Salir -->
-            <a href="{{ url('/') }}" class="btn btn-outline-secondary">
-                ← Salir
+            <a href="{{ url('/') }}" class="btn btn-success d-flex align-items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-left" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M10.146 12.354a.5.5 0 0 0 .708-.708L8.707 10H14a.5.5 0 0 0 0-1H8.707l2.147-1.646a.5.5 0 1 0-.708-.708l-3 2.5a.5.5 0 0 0 0 .708l3 2.5z"/>
+                    <path fill-rule="evenodd" d="M4.5 14A1.5 1.5 0 0 1 3 12.5v-9A1.5 1.5 0 0 1 4.5 2h7A1.5 1.5 0 0 1 13 3.5V6a.5.5 0 0 1-1 0V3.5a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V10a.5.5 0 0 1 1 0v2.5a1.5 1.5 0 0 1-1.5 1.5h-7z"/>
+                </svg>
+                Volver al inicio
             </a>
         </div>
     <!-- MENSAJES -->
