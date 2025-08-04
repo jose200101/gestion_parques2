@@ -190,7 +190,9 @@ return [
     |
     */
 
-    'classes_body' => '',
+    //INSERTO CODIGO PARA CUADRAR EL LAYOUT ANDRES
+    'classes_body' => 'layout-fixed sidebar-mini sidebar-collapse',
+    //FIN CODIGO ANDRES
     'classes_brand' => '',
     'classes_brand_text' => '',
     'classes_content_wrapper' => '',
@@ -407,6 +409,24 @@ return [
            'icon_color' => 'cyan',
            'url' => '#',
        ],
+       //AGREGAR CONFIGURACION EN BARRA LATERAL ANDRÉS
+        ['header' => 'CONFIGURACION'],
+        [
+            'text' => 'Panel de Configuracion',
+            'route' => 'configuracion.panel_configuracion',
+            'icon' => 'fas fa-fw fa-sliders-h',
+        ],
+        [
+            'text' => 'Logs del Sistema',
+            'route' => 'configuracion.logs_sistema',
+            'icon' => 'fas fa-fw fa-clipboard-list',
+        ],
+        [
+            'text' => 'Administración de Backups',
+            'route' => 'configuracion.admin_backups',
+            'icon' => 'fas fa-fw fa-database',
+        ],
+        //FIN ANDRES
     ],
 
     /*
@@ -431,9 +451,10 @@ return [
     |--------------------------------------------------------------------------
     */
 
+    //SE ACTIVO EL DATATABLES PARA FORMULARIOS AVANZADOS ANDRES
     'plugins' => [
         'Datatables' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
@@ -477,6 +498,23 @@ return [
                 ],
             ],
         ],
+        //AGREGADO NOTIFICACIONES ANDRÉS
+        'Toastr' => [
+        'active' => true,
+        'files' => [
+            [
+                'type' => 'js',
+                'asset' => false,
+                'location' => '//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js',
+            ],
+            [
+                'type' => 'css',
+                'asset' => false,
+                'location' => '//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css',
+            ],
+        ],
+        ],
+        //FIN AGREGADO ANDRES
         'Sweetalert2' => [
             'active' => false,
             'files' => [

@@ -35,3 +35,18 @@ Route::middleware('api_auth')->group(function () {
     // Esta ruta invalida la sesión y redirige al login
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
+
+//RUTAS CONFIGURACION ANDRÉS
+// Rutas para las vistas de los campos de configuración
+Route::get('/configuracion/panel_configuracion', function () {
+    return view('configuracion.panel_configuracion');
+})->name('configuracion.panel_configuracion');
+
+Route::get('/configuracion/logs_sistema', function () {
+    return view('configuracion.logs_sistema');
+})->name('configuracion.logs_sistema');
+
+Route::get('/configuracion/admin_backups', function () {
+    return view('configuracion.admin_backups');
+})->name('configuracion.admin_backups');
+//RUTAS CONFIGURACION ANDRÉS
