@@ -78,24 +78,90 @@
     </div>
 </div>
 
-<!-- MODAL CREAR -->
+<!-- MODAL CREAR USUARIO Y PERSONA -->
 <div class="modal fade" id="modalCrear" tabindex="-1">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <form method="POST" action="{{ route('usuarios.store') }}">
         @csrf
         <div class="modal-content">
-            <div class="modal-header"><h5 class="modal-title">Nuevo Usuario</h5></div>
-            <div class="modal-body">
-                <input name="cod_permiso" class="form-control mb-2" placeholder="Código Permiso" required>
-                <input name="nombre_usuario" class="form-control mb-2" placeholder="Nombre de Usuario" required>
-                <input name="contrasena" class="form-control mb-2" placeholder="Contraseña" required>
-                <select name="estado_usuario" class="form-control mb-2">
-                    <option value="activo">Activo</option>
-                    <option value="inactivo">Inactivo</option>
-                </select>
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Registrar Nuevo Usuario</h5>
             </div>
+            <div class="modal-body">
+                <!-- DATOS DE LA PERSONA -->
+                <h6 class="text-success fw-bold">Datos Personales</h6>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Nombre</label>
+                        <input name="nombre" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Apellido</label>
+                        <input name="apellido" class="form-control" required>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">Nacionalidad</label>
+                        <input name="nacionalidad" class="form-control" required>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">DNI</label>
+                        <input name="dni" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">Genero</label>
+                        <select name="genero" class="form-control" required>
+                            <option value="M">Masculino</option>
+                            <option value="F">Femenino</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">Fecha de Nacimiento</label>
+                        <input type="date" name="fecha_nacimiento" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Teléfono</label>
+                        <input name="telefono" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Dirección</label>
+                        <input name="direccion" class="form-control" required>
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- DATOS DE USUARIO -->
+                <h6 class="text-success fw-bold">Datos de Usuario</h6>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Nombre de Usuario</label>
+                        <input name="nombre_usuario" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Contraseña</label>
+                        <input type="password" name="contrasena" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Estado</label>
+                        <select name="estado_usuario" class="form-control">
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Código de Permiso</label>
+                        <select name="cod_permiso" class="form-control" required>
+                            <option value="1">Administrador</option>
+                            <option value="2">Empleado</option>
+                            <option value="3">Visitante</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
             <div class="modal-footer">
-                <button class="btn btn-primary" type="submit">Guardar</button>
+                <button class="btn btn-success" type="submit">Guardar</button>
                 <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
             </div>
         </div>
@@ -103,7 +169,7 @@
   </div>
 </div>
 
-<!-- MODAL EDITAR -->
+
 <!-- MODAL EDITAR -->
 <div class="modal fade" id="modalEditar" tabindex="-1">
   <div class="modal-dialog">
