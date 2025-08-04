@@ -3,78 +3,113 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-//incluimos Http
 use Illuminate\Support\Facades\Http;
 
 class UsuariosController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
-{
-    // Realizamos la petición GET a la API de Node.js
-    $response = Http::get('http://localhost:3000/usuarios');
-
-    // Verificamos si la petición fue exitosa (código 200)
-    if ($response->successful()) {
-        // Obtenemos los datos JSON como un array asociativo
-        $usuarios = $response->json();
-
-        // Enviamos los datos a la vista 'usuarios'
-        return view('usuarios', ['ResulUsuarios' => $usuarios]);
-    } else {
-        // En caso de error, puedes manejarlo aquí, por ejemplo:
-        return view('usuarios', ['ResulUsuarios' => []])->with('error', 'No se pudieron obtener los datos de la API.');
-    }
-}
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
     {
-        //
+        $response = Http::get('http://localhost:3000/usuarios');
+
+        if ($response->successful()) {
+            $usuarios = $response->json();
+            return view('usuarios', ['ResulUsuarios' => $usuarios]);
+        } else {
+            return view('usuarios', ['ResulUsuarios' => []])
+                ->with('error', 'No se pudieron obtener los datos de la API.');
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        // 1. Obtener todos los usuarios existentes
+        $response = Http::get('http://localhost:3000/usuarios');
+        if (!$response->successful()) {
+            return redirect()->route('usuarios.index')->with('error', 'Error al validar usuarios existentes.');
+        }
+
+        $usuarios = $response->json();
+
+        // 2. Verificar si el nombre de usuario ya existe
+        foreach ($usuarios as $usuario) {
+            if (
+                strtolower($usuario['nombre_usuario']) === strtolower($request->nombre_usuario)
+            ) {
+                return redirect()->route('usuarios.index')->with('error', 'El nombre de usuario ya existe.');
+            }
+        }
+
+        // 3. Calcular automáticamente el próximo cod_usuario
+        $maxCodUsuario = 0;
+        foreach ($usuarios as $usuario) {
+            if (is_numeric($usuario['cod_usuario']) && $usuario['cod_usuario'] > $maxCodUsuario) {
+                $maxCodUsuario = $usuario['cod_usuario'];
+            }
+        }
+        $nuevoCodUsuario = $maxCodUsuario + 1;
+
+        // 4. Preparar los datos para enviar al backend
+        $data = [
+            'cod_usuario'     => $nuevoCodUsuario,
+            'cod_permiso'     => $request->cod_permiso,
+            'nombre_usuario'  => $request->nombre_usuario,
+            'contrasena'      => $request->contrasena,
+            'estado_usuario'  => $request->estado_usuario,
+            'primer_acceso'   => 1,
+            'cod_bitacora'    => 0
+        ];
+
+        // 5. Enviar a la API
+        $insertResponse = Http::post('http://localhost:3000/usuarios', $data);
+
+        if ($insertResponse->successful()) {
+            return redirect()->route('usuarios.index')->with('success', 'REGISTRO CREADO DE MANERA EXITOSA.');
+        } else {
+            return redirect()->route('usuarios.index')->with('error', 'Error al insertar usuario.');
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        public function update(Request $request, string $id = null)
+        {
+            $codUsuario = $request->cod_usuario;
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+            // Mapeamos los campos a actualizar
+            $campos = [
+                'cod_permiso'     => $request->cod_permiso,
+                'nombre_usuario'  => $request->nombre_usuario,
+                'contrasena'      => $request->contrasena,
+                'estado_usuario'  => $request->estado_usuario,
+                'primer_acceso'   => $request->primer_acceso,
+                'cod_bitacora'    => $request->cod_bitacora
+            ];
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+            $errores = [];
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+            // Enviar una solicitud por cada campo
+            foreach ($campos as $campo => $valor) {
+                $data = [
+                    'dato_actualizar' => $campo,
+                    'nuevo_dato'      => $valor,
+                    'condicion'       => 'cod_usuario',
+                    'v_condicion'     => $codUsuario
+                ];
+
+                $response = Http::put('http://localhost:3000/usuarios', $data);
+
+                if (!$response->successful()) {
+                    $errores[] = $campo;
+                }
+            }
+
+            if (count($errores) > 0) {
+                return redirect()->route('usuarios.index')->with('error', 'Error al actualizar los campos: ' . implode(', ', $errores));
+            }
+
+            return redirect()->route('usuarios.index')->with('success', 'USUARIO ACTUALIZADO DE MANERA EXITOSA.');
+        }
+
+    public function create() {}
+    public function show(string $id) {}
+    public function edit(string $id) {}
+    public function destroy(string $id) {}
 }

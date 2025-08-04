@@ -29,4 +29,10 @@ Route::middleware('api_auth')->group(function () {
     // Ruta de Logout
     // Esta ruta invalida la sesión y redirige al login
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    //Ruta usuarios y vista con tabla + modal
+    Route::get('/usuarios', [UsuariosController::class, 'index'])->name('usuarios.index');
+    Route::post('/usuarios', [UsuariosController::class, 'store'])->name('usuarios.store');
+    Route::post('/usuarios/actualizar', [UsuariosController::class, 'update'])->name('usuarios.update');
+
 });
