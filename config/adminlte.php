@@ -63,7 +63,7 @@ return [
     |
     */
 
-    'logo' => '<b>pulmo Verde</b>',
+    'logo' => '<b>Pulmón Verde</b>',
     'logo_img' => 'vendor/adminlte/dist/img/pulmonVerde.jpg',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
@@ -305,11 +305,6 @@ return [
         'text' => 'search',
         'topnav_right' => true,
     ],
-    [
-        'type' => 'fullscreen-widget',
-        'topnav_right' => true,
-    ],
-    
     // --- NUEVA ENTRADA PARA EL BOTÓN DE CERRAR SESIÓN ---
     [
         'text' => 'Cerrar Sesión',
@@ -346,6 +341,13 @@ return [
             'url' => 'admin/settings',
             'icon' => 'fas fa-fw fa-lock',
         ],
+
+        [
+            'text' => 'Usuarios',
+            'url'  => 'usuarios',
+            'icon' => 'fas fa-users',
+        ],
+
         [
             'text' => 'Reportes',
             'icon' => 'fas fa-fw fa-chart-bar', // He usado un ícono más apropiado para reportes
