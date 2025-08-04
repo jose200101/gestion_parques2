@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuariosController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ParquesController; //Ana R.Cabrera
+
 
 // Ruta para mostrar el formulario de login
 // Con el nombre 'login', que es usado por el middleware para las redirecciones
@@ -19,6 +21,9 @@ Route::middleware('api_auth')->group(function () {
     Route::get('/', function () {
         return view('welcome');
     })->name('home'); // Asigno el nombre 'home' para referencia futura
+
+    // Rutas para la gestión de parques (Ana R. Cabrera)
+    Route::resource('parques', ParquesController::class);
 
     // Rutas para la gestión de usuarios
     Route::get('/usuarios', [UsuariosController::class, 'index'])->name('usuarios.index');

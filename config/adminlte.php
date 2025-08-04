@@ -300,111 +300,119 @@ return [
 
     'menu' => [
        // Navbar items:
-    [
-        'type' => 'navbar-search',
-        'text' => 'search',
-        'topnav_right' => true,
-    ],
-    [
-        'type' => 'fullscreen-widget',
-        'topnav_right' => true,
-    ],
-    
-    // --- NUEVA ENTRADA PARA EL BOTÓN DE CERRAR SESIÓN ---
-    [
-        'text' => 'Cerrar Sesión',
-        'url'  => 'logout', // URL de la ruta de logout
-        'icon' => 'fas fa-fw fa-power-off text-danger',
-        'topnav_right' => true,
-    ],
-    // ------------------------------------
-        // Sidebar items:
+       [
+           'type' => 'navbar-search',
+           'text' => 'search',
+           'topnav_right' => true,
+       ],
+       [
+           'type' => 'fullscreen-widget',
+           'topnav_right' => true,
+       ],
+       
+       // --- NUEVA ENTRADA PARA EL BOTÓN DE CERRAR SESIÓN ---
+       [
+           'text' => 'Cerrar Sesión',
+           'url'  => 'logout', // URL de la ruta de logout
+           'icon' => 'fas fa-fw fa-power-off text-danger',
+           'topnav_right' => true,
+       ],
+       // ------------------------------------
+       // Sidebar items:
+       [
+           'type' => 'sidebar-menu-search',
+           'text' => 'search',
+       ],
+
+        // ANA R. CABRERA - Módulo de Gestión de Parques Forestales
         [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
-        ],
-        [
-            'text' => 'blog',
-            'url' => 'admin/blog',
-            'can' => 'manage-blog',
-        ],
-        [
-            'text' => 'pages',
-            'url' => 'admin/pages',
-            'icon' => 'far fa-fw fa-file',
-            'label' => 4,
-            'label_color' => 'success',
-        ],
-        ['header' => 'account_settings'],
-        [
-            'text' => 'profile',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-user',
-        ],
-        [
-            'text' => 'change_password',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
-        ],
-        [
-            'text' => 'Reportes',
-            'icon' => 'fas fa-fw fa-chart-bar', // He usado un ícono más apropiado para reportes
+            'text'    => 'Gestión de Parques',
+            'icon'    => 'fas fa-tree',
+            'url'     => '#',
             'submenu' => [
                 [
-                    'text' => 'Reportes Ambientales',
-                    'url' => '/reportes/ambientales',
-                    'icon' => 'far fa-circle',
-                ],
-                [
-                    'text' => 'Reportes de Empleados',
-                    'url' => '/reportes/empleados',
-                    'icon' => 'far fa-circle',
-                ],
-                [
-                    'text' => 'Reportes de Clientes',
-                    'url' => '/reportes/clientes',
-                    'icon' => 'far fa-circle',
-                ],
-                [
-                    'text' => 'Reportes de Recursos del Parque',
-                    'url' => '/reportes/recursos',
-                    'icon' => 'far fa-circle',
-                ],
-                [
-                    'text' => 'Reportes de Eventos Ambientales',
-                    'url' => '/reportes/eventos',
-                    'icon' => 'far fa-circle',
+                    'text' => 'Listado de Parques',
+                    'url'  => 'parques.index',
+                    'icon' => 'fas fa-leaf',
                 ],
             ],
         ],
-        ['header' => 'labels'],
-        [
-            'text' => 'important',
-            'icon_color' => 'red',
-            'url' => '#',
-        ],
-        [
-            'text' => 'warning',
-            'icon_color' => 'yellow',
-            'url' => '#',
-        ],
-        [
-            'text' => 'information',
-            'icon_color' => 'cyan',
-            'url' => '#',
-        ],
+       [
+           'text' => 'blog',
+           'url' => 'admin/blog',
+           'can' => 'manage-blog',
+       ],
+       [
+           'text' => 'pages',
+           'url' => 'admin/pages',
+           'icon' => 'far fa-fw fa-file',
+           'label' => 4,
+           'label_color' => 'success',
+       ],
+       ['header' => 'account_settings'],
+       [
+           'text' => 'profile',
+           'url' => 'admin/settings',
+           'icon' => 'fas fa-fw fa-user',
+       ],
+       [
+           'text' => 'change_password',
+           'url' => 'admin/settings',
+           'icon' => 'fas fa-fw fa-lock',
+       ],
+       [
+           'text' => 'Reportes',
+           'icon' => 'fas fa-fw fa-chart-bar', // He usado un ícono más apropiado para reportes
+           'submenu' => [
+               [
+                   'text' => 'Reportes Ambientales',
+                   'url' => '/reportes/ambientales',
+                   'icon' => 'far fa-circle',
+               ],
+               [
+                   'text' => 'Reportes de Empleados',
+                   'url' => '/reportes/empleados',
+                   'icon' => 'far fa-circle',
+               ],
+               [
+                   'text' => 'Reportes de Clientes',
+                   'url' => '/reportes/clientes',
+                   'icon' => 'far fa-circle',
+               ],
+               [
+                   'text' => 'Reportes de Recursos del Parque',
+                   'url' => '/reportes/recursos',
+                   'icon' => 'far fa-circle',
+               ],
+               [
+                   'text' => 'Reportes de Eventos Ambientales',
+                   'url' => '/reportes/eventos',
+                   'icon' => 'far fa-circle',
+               ],
+           ],
+       ],
+       ['header' => 'labels'],
+       [
+           'text' => 'important',
+           'icon_color' => 'red',
+           'url' => '#',
+       ],
+       [
+           'text' => 'warning',
+           'icon_color' => 'yellow',
+           'url' => '#',
+       ],
+       [
+           'text' => 'information',
+           'icon_color' => 'cyan',
+           'url' => '#',
+       ],
     ],
 
     /*
     |--------------------------------------------------------------------------
     | Menu Filters
     |--------------------------------------------------------------------------
-    |
-    | Here we can modify the menu filters of the admin panel.
-    |
-    | For detailed instructions you can look the menu filters section here:
-    | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Menu-Configuration
-    |
     */
 
     'filters' => [
@@ -421,12 +429,6 @@ return [
     |--------------------------------------------------------------------------
     | Plugins Initialization
     |--------------------------------------------------------------------------
-    |
-    | Here we can modify the plugins used inside the admin panel.
-    |
-    | For detailed instructions you can look the plugins section here:
-    | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Plugins-Configuration
-    |
     */
 
     'plugins' => [
