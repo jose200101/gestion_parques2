@@ -393,6 +393,11 @@ return [
                ],
            ],
        ],
+       [
+    'text' => 'Mantenimientos',
+    'icon' => 'fas fa-tools',
+    'url'  => 'mantenimientos',
+],
        ['header' => 'labels'],
        [
            'text' => 'important',

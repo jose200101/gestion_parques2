@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuariosController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ParquesController; //Ana R.Cabrera
+use App\Http\Controllers\MantenimientoController;
 
 
 // Ruta para mostrar el formulario de login
@@ -50,3 +51,10 @@ Route::get('/configuracion/admin_backups', function () {
     return view('configuracion.admin_backups');
 })->name('configuracion.admin_backups');
 //RUTAS CONFIGURACION ANDRÉS
+
+// Ruta del listado de mantenimientos
+Route::get('/mantenimientos/create', function () {
+    return view('mantenimientos.create'); // <-- Asegúrate de tener esta vista
+})->name('mantenimientos.create');
+
+Route::get('/mantenimientos', [MantenimientoController::class, 'index'])->name('mantenimientos.index');
