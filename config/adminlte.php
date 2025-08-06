@@ -398,6 +398,11 @@ return [
     'icon' => 'fas fa-tools',
     'url'  => 'mantenimientos',
 ],
+[
+    'text' => 'Recursos',
+    'icon' => 'fas fa-boxes',
+    'url'  => 'recursos',
+],
        ['header' => 'labels'],
        [
            'text' => 'important',

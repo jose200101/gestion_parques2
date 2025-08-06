@@ -52,9 +52,15 @@ Route::get('/configuracion/admin_backups', function () {
 })->name('configuracion.admin_backups');
 //RUTAS CONFIGURACION ANDRÉS
 
-// Ruta del listado de mantenimientos
+// Ruta del listado de Mantenimientos
 Route::get('/mantenimientos/create', function () {
     return view('mantenimientos.create'); // <-- Asegúrate de tener esta vista
 })->name('mantenimientos.create');
 
+//Ruta de Mantenimientos Carlos.
 Route::get('/mantenimientos', [MantenimientoController::class, 'index'])->name('mantenimientos.index');
+
+// Ruta del listado de Recursos
+Route::get('/recursos', function () {
+    return view('recursos.index');
+})->name('recursos.index');
