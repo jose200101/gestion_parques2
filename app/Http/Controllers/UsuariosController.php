@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Session;
 
 class UsuariosController extends Controller
 {
@@ -138,37 +139,37 @@ class UsuariosController extends Controller
     }
 
     public function destroy(Request $request, $id)
-{
-    // 1) Intentar DELETE real
-    $tryDelete = \Illuminate\Support\Facades\Http::delete("http://localhost:3000/usuarios/{$id}");
-    if ($tryDelete->successful()) {
-        if ($request->ajax()) {
-            return response()->json(['status' => 'ok', 'message' => 'Usuario eliminado correctamente.']);
+    {
+        // 1) Intentar DELETE real
+        $tryDelete = \Illuminate\Support\Facades\Http::delete("http://localhost:3000/usuarios/{$id}");
+        if ($tryDelete->successful()) {
+            if ($request->ajax()) {
+                return response()->json(['status' => 'ok', 'message' => 'Usuario eliminado correctamente.']);
+            }
+            return redirect()->route('usuarios.index')->with('success', 'Usuario eliminado correctamente.');
         }
-        return redirect()->route('usuarios.index')->with('success', 'Usuario eliminado correctamente.');
-    }
 
-    // 2) Fallback: Soft delete (estado inactivo)
-    $softDelete = \Illuminate\Support\Facades\Http::put('http://localhost:3000/usuarios', [
-        'dato_actualizar' => 'estado_usuario',
-        'nuevo_dato'      => 'inactivo',
-        'condicion'       => 'cod_usuario',
-        'v_condicion'     => $id
-    ]);
+        // 2) Fallback: Soft delete (estado inactivo)
+        $softDelete = \Illuminate\Support\Facades\Http::put('http://localhost:3000/usuarios', [
+            'dato_actualizar' => 'estado_usuario',
+            'nuevo_dato'      => 'inactivo',
+            'condicion'       => 'cod_usuario',
+            'v_condicion'     => $id
+        ]);
 
-    if ($softDelete->successful()) {
-        if ($request->ajax()) {
-            return response()->json(['status' => 'ok', 'message' => 'Usuario desactivado.']);
+        if ($softDelete->successful()) {
+            if ($request->ajax()) {
+                return response()->json(['status' => 'ok', 'message' => 'Usuario desactivado.']);
+            }
+            return redirect()->route('usuarios.index')->with('success', 'Usuario desactivado.');
         }
-        return redirect()->route('usuarios.index')->with('success', 'Usuario desactivado.');
-    }
 
-    $msg = 'No se pudo eliminar/desactivar: ' . $tryDelete->body();
-    if ($request->ajax()) {
-        return response()->json(['status' => 'error', 'message' => $msg], 500);
+        $msg = 'No se pudo eliminar/desactivar: ' . $tryDelete->body();
+        if ($request->ajax()) {
+            return response()->json(['status' => 'error', 'message' => $msg], 500);
+        }
+        return redirect()->route('usuarios.index')->with('error', $msg);
     }
-    return redirect()->route('usuarios.index')->with('error', $msg);
-}
 
     public function dashboard()
     {
@@ -217,52 +218,168 @@ class UsuariosController extends Controller
         return view('usuarios_dashboard', compact('totales', 'porRol'));
     }
 
+    // ========== NUEVAS FUNCIONES PARA PERFIL Y CAMBIO DE CONTRASEÑA ==========
+
+    /**
+     * Mostrar el perfil del usuario actual
+     */
     public function perfil()
-        {
-            // 1) Intentamos tomar el usuario autenticado de Laravel (si lo usas)
-            $username = null;
-            if (Auth::check()) {
-                // Ajusta aquí según tu tabla de users de Laravel (name, email, username, etc.)
-                $username = Auth::user()->name ?? Auth::user()->email ?? null;
-            }
-
-            // 2) Si no hay Auth, probamos con algo guardado en sesión (si tu login lo guarda)
-            if (!$username) {
-                $username = session('nombre_usuario');
-            }
-
-            // 3) Buscamos al usuario en tu backend Node
-            $user = null;
-            $permisoNombre = null;
-
-            $resp = Http::get('http://localhost:3000/usuarios');
-            if ($resp->ok()) {
-                $usuarios = $resp->json();
-
-                if ($username) {
-                    $user = collect($usuarios)->firstWhere('nombre_usuario', $username);
-                }
-
-                // Si no hay username (no hay login real), toma el primero solo para demo
-                if (!$user && !empty($usuarios)) {
-                    $user = $usuarios[0];
-                }
-
-                if ($user) {
-                    $permiso = (int)($user['cod_permiso'] ?? 0);
-                    $permisoNombre = [
-                        1 => 'Administrador',
-                        2 => 'Empleado',
-                        3 => 'Visitante',
-                    ][$permiso] ?? 'Desconocido';
-                }
-            }
-
-            return view('perfil', [
-                'user' => $user,
-                'permisoNombre' => $permisoNombre,
-            ]);
+    {
+        // Obtener el nombre de usuario de la sesión
+        $nombreUsuarioSesion = Session::get('usuario');
+        $usuarioCompleto = Session::get('usuario_completo');
+        
+        if (!$nombreUsuarioSesion && $usuarioCompleto && is_array($usuarioCompleto)) {
+            $nombreUsuarioSesion = $usuarioCompleto['nombre_usuario'] ?? null;
         }
+        
+        if (!$nombreUsuarioSesion) {
+            return view('perfil', [
+                'user' => null,
+                'permisoNombre' => null
+            ])->with('error', 'No hay usuario en sesión');
+        }
+
+        // Realizar petición GET para obtener todos los usuarios
+        $response = Http::get('http://localhost:3000/usuarios');
+
+        if (!$response->successful()) {
+            return view('perfil', [
+                'user' => null,
+                'permisoNombre' => null
+            ])->with('error', 'Error al conectar con la API');
+        }
+
+        $usuarios = $response->json();
+        
+        // Buscar el usuario actual por nombre_usuario
+        $usuarioActual = null;
+        foreach ($usuarios as $usuario) {
+            if ($usuario['nombre_usuario'] === $nombreUsuarioSesion) {
+                $usuarioActual = $usuario;
+                break;
+            }
+        }
+
+        if (!$usuarioActual) {
+            return view('perfil', [
+                'user' => null,
+                'permisoNombre' => null
+            ])->with('error', 'Usuario no encontrado en la base de datos');
+        }
+
+        // Obtener información del permiso
+        $permisoNombre = $this->obtenerNombrePermiso($usuarioActual['cod_permiso']);
+
+        return view('perfil', [
+            'user' => $usuarioActual,
+            'permisoNombre' => $permisoNombre
+        ]);
+    }
+
+    /**
+     * Mostrar formulario para cambio de contraseña
+     */
+    public function mostrarCambioPassword()
+    {
+        $nombreUsuarioSesion = Session::get('usuario');
+        $usuarioCompleto = Session::get('usuario_completo');
+        
+        if (!$nombreUsuarioSesion && $usuarioCompleto && is_array($usuarioCompleto)) {
+            $nombreUsuarioSesion = $usuarioCompleto['nombre_usuario'] ?? null;
+        }
+        
+        if (!$nombreUsuarioSesion) {
+            return redirect()->route('login')->with('error', 'Debes iniciar sesión');
+        }
+
+        $usuarioString = is_array($nombreUsuarioSesion) ? 
+            ($nombreUsuarioSesion['nombre_usuario'] ?? 'Usuario') : 
+            $nombreUsuarioSesion;
+
+        return view('cambio-password', ['usuario' => $usuarioString]);
+    }
+
+    /**
+     * Procesar cambio de contraseña
+     */
+    public function cambiarPassword(Request $request)
+    {
+        $request->validate([
+            'password_actual' => 'required',
+            'password_nuevo' => 'required|min:6',
+            'password_confirmacion' => 'required|same:password_nuevo'
+        ]);
+
+        $nombreUsuarioSesion = Session::get('usuario');
+        $usuarioCompleto = Session::get('usuario_completo');
+        
+        if (!$nombreUsuarioSesion && $usuarioCompleto && is_array($usuarioCompleto)) {
+            $nombreUsuarioSesion = $usuarioCompleto['nombre_usuario'] ?? null;
+        }
+        
+        $usuarioString = is_array($nombreUsuarioSesion) ? 
+            ($nombreUsuarioSesion['nombre_usuario'] ?? null) : 
+            $nombreUsuarioSesion;
+        
+        if (!$usuarioString) {
+            return redirect()->route('login')->with('error', 'Debes iniciar sesión');
+        }
+
+        // Obtener información del usuario actual
+        $response = Http::get('http://localhost:3000/usuarios');
+        
+        if (!$response->successful()) {
+            return back()->with('error', 'Error al conectar con la API');
+        }
+
+        $usuarios = $response->json();
+        $usuarioActual = null;
+        
+        foreach ($usuarios as $usuario) {
+            if ($usuario['nombre_usuario'] === $usuarioString) {
+                $usuarioActual = $usuario;
+                break;
+            }
+        }
+
+        if (!$usuarioActual) {
+            return back()->with('error', 'Usuario no encontrado');
+        }
+
+        // Verificar contraseña actual
+        if ($usuarioActual['contrasena'] !== $request->password_actual) {
+            return back()->with('error', 'La contraseña actual es incorrecta');
+        }
+
+        // Actualizar contraseña usando tu API PUT
+        $updateResponse = Http::put('http://localhost:3000/usuarios', [
+            'dato_actualizar' => 'contrasena',
+            'nuevo_dato' => $request->password_nuevo,
+            'condicion' => 'nombre_usuario',
+            'v_condicion' => $usuarioString
+        ]);
+
+        if ($updateResponse->successful()) {
+            return back()->with('success', 'Contraseña actualizada correctamente');
+        } else {
+            return back()->with('error', 'Error al actualizar la contraseña');
+        }
+    }
+
+    /**
+     * Obtener el nombre del permiso basado en el código
+     */
+    private function obtenerNombrePermiso($codPermiso)
+    {
+        $permisos = [
+            1 => 'Administrador',
+            2 => 'Empleado',
+            3 => 'Visitante',
+        ];
+
+        return $permisos[$codPermiso] ?? 'Permiso desconocido';
+    }
 
     // Stubs (si los necesitas)
     public function create(){}

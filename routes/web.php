@@ -40,5 +40,8 @@ Route::middleware('api_auth')->group(function () {
     //Ruta vista del perfil
     Route::get('/perfil', [UsuariosController::class, 'perfil'])->name('perfil');
 
+    // Rutas para cambio de contraseña
+    Route::get('/cambiar-password', [UsuariosController::class, 'mostrarCambioPassword'])->name('usuarios.cambio-password');
+    Route::post('/cambiar-password', [UsuariosController::class, 'cambiarPassword'])->name('usuarios.cambiar-password');
 
 });

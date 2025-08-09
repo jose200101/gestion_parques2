@@ -333,7 +333,7 @@ return [
         ],
         [
             'text' => 'Cambiar contraseña',
-            'url' => 'admin/settings',
+            'url' => 'cambiar-password',
             'icon' => 'fas fa-fw fa-lock',
         ],
 
