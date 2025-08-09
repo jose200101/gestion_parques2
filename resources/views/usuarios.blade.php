@@ -19,7 +19,9 @@
 <body>
 <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="text-primary">Listado de Usuarios</h1>
+            <h1 class="text-center fw-bold" style="color: #28a745;">
+                Listado de Usuarios
+            </h1>
 
             <!-- Botón Salir -->
             <a href="{{ url('/') }}" class="btn btn-success d-flex align-items-center gap-2">
@@ -38,45 +40,76 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
-    <!-- BOTÓN CREAR -->
-    <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalCrear">Crear nuevo usuario</button>
+        <!-- BUSCADOR DE USUARIOS -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+        <form class="d-flex gap-2" method="GET" action="{{ route('usuarios.index') }}">
+            <input type="text"
+                name="buscar"
+                value="{{ $buscar ?? request('buscar') }}"
+                class="form-control"
+                placeholder="Buscar usuario...">
+            <button class="btn btn-success" type="submit">Buscar</button>
+            @if(!empty($buscar))
+                <a class="btn btn-outline-secondary" href="{{ route('usuarios.index') }}">Limpiar</a>
+            @endif
+        </form>
 
-    <!-- TABLA -->
-    <div class="table-responsive">
-        <table class="table table-striped table-bordered table-hover table-primary-blue">
-            <thead>
-                <tr>
-                    <th>Código de Usuario</th>
-                    <th>Código de Permiso</th>
-                    <th>Nombre de Usuario</th>
-                    <th>Contraseña</th>
-                    <th>Estado</th>
-                    <th>Primer Acceso</th>
-                    <th>Código de Bitácora</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($ResulUsuarios as $usuario)
-                <tr>
-                    <td>{{ $usuario['cod_usuario'] ?? 'N/A' }}</td>
-                    <td>{{ $usuario['cod_permiso'] ?? 'N/A' }}</td>
-                    <td>{{ $usuario['nombre_usuario'] ?? 'N/A' }}</td>
-                    <td>{{ $usuario['contrasena'] ?? 'N/A' }}</td>
-                    <td>{{ $usuario['estado_usuario'] ?? 'N/A' }}</td>
-                    <td>{{ $usuario['primer_acceso'] ?? 'N/A' }}</td>
-                    <td>{{ $usuario['cod_bitacora'] ?? 'N/A' }}</td>
-                    <td>
-                        <button class="btn btn-warning btn-sm"
-                            data-bs-toggle="modal" data-bs-target="#modalEditar"
-                            onclick="cargarDatosEditar({{ json_encode($usuario) }})">Editar</button>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+        {{-- (Opcional) Botón crear que ya tenías --}}
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCrear">+ Nuevo usuario</button>
     </div>
-</div>
+
+            @if(isset($buscar) && $buscar !== '' && count($ResulUsuarios) === 0)
+        <div class="alert alert-warning">No se encontraron usuarios con “{{ $buscar }}”.</div>
+    @endif
+
+        <!-- TABLA -->
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover table-primary-blue">
+                <thead>
+                    <tr>
+                        <th>Código de Usuario</th>
+                        <th>Código de Permiso</th>
+                        <th>Nombre de Usuario</th>
+                        <th>Contraseña</th>
+                        <th>Estado</th>
+                        <th>Primer Acceso</th>
+                        <th>Código de Bitácora</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($ResulUsuarios as $usuario)
+                    <tr>
+                        <td>{{ $usuario['cod_usuario'] ?? 'N/A' }}</td>
+                        <td>{{ $usuario['cod_permiso'] ?? 'N/A' }}</td>
+                        <td>{{ $usuario['nombre_usuario'] ?? 'N/A' }}</td>
+                        <td>{{ $usuario['contrasena'] ?? 'N/A' }}</td>
+                        <td>{{ $usuario['estado_usuario'] ?? 'N/A' }}</td>
+                        <td>{{ $usuario['primer_acceso'] ?? 'N/A' }}</td>
+                        <td>{{ $usuario['cod_bitacora'] ?? 'N/A' }}</td>
+                        <td>
+                            <!-- Botón Editar -->
+                            <button class="btn btn-warning btn-sm"
+                                data-bs-toggle="modal" data-bs-target="#modalEditar"
+                                onclick="cargarDatosEditar({{ json_encode($usuario) }})">
+                                Editar
+                            </button>
+
+                            <!-- Botón Eliminar -->
+                            <form action="{{ route('usuarios.destroy', $usuario['cod_usuario']) }}"
+                                method="POST"
+                                style="display:inline-block;"
+                                onsubmit="return confirm('¿Seguro que deseas eliminar este usuario?');">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger btn-sm">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
 <!-- MODAL CREAR USUARIO Y PERSONA -->
 <div class="modal fade" id="modalCrear" tabindex="-1">

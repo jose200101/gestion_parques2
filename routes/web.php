@@ -34,5 +34,6 @@ Route::middleware('api_auth')->group(function () {
     Route::get('/usuarios', [UsuariosController::class, 'index'])->name('usuarios.index');
     Route::post('/usuarios', [UsuariosController::class, 'store'])->name('usuarios.store');
     Route::post('/usuarios/actualizar', [UsuariosController::class, 'update'])->name('usuarios.update');
+    Route::delete('/usuarios/{id}', [UsuariosController::class, 'destroy'])->name('usuarios.destroy');
 
 });

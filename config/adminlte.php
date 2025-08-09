@@ -348,6 +348,8 @@ return [
             'icon' => 'fas fa-users',
         ],
 
+        
+
         [
             'text' => 'Reportes',
             'icon' => 'fas fa-fw fa-chart-bar', // He usado un ícono más apropiado para reportes
