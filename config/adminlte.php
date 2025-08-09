@@ -300,11 +300,6 @@ return [
 
     'menu' => [
        // Navbar items:
-    [
-        'type' => 'navbar-search',
-        'text' => 'search',
-        'topnav_right' => true,
-    ],
     // --- NUEVA ENTRADA PARA EL BOTÓN DE CERRAR SESIÓN ---
     [
         'text' => 'Cerrar Sesión',
