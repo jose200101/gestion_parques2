@@ -348,7 +348,11 @@ return [
             'icon' => 'fas fa-users',
         ],
 
-        
+        [
+            'text' => 'Dashboard usuarios',
+            'url'  => 'usuarios/dashboard', 
+            'icon' => 'fas fa-chart-pie',
+        ],
 
         [
             'text' => 'Reportes',

@@ -169,6 +169,53 @@ class UsuariosController extends Controller
     return redirect()->route('usuarios.index')->with('error', $msg);
 }
 
+    public function dashboard()
+    {
+        $response = \Illuminate\Support\Facades\Http::get('http://localhost:3000/usuarios');
+
+        if (!$response->successful()) {
+            return view('usuarios_dashboard', [
+                'totales' => ['total' => 0, 'admin' => 0, 'empleado' => 0, 'visitante' => 0],
+                'porRol'  => [],
+            ])->with('error', 'No se pudieron obtener los datos de la API.');
+        }
+
+        $usuarios = $response->json() ?? [];
+
+        // Mostrar solo activos (mismo criterio que en la tabla principal)
+        $usuarios = array_values(array_filter($usuarios, function ($u) {
+            $estado = strtolower($u['estado_usuario'] ?? '');
+            return in_array($estado, ['activo', 'active', '1']);
+        }));
+
+        // Mapeo de permisos
+        $nombreRol = function ($cod) {
+            return match ((int)$cod) {
+                1 => 'Administrador',
+                2 => 'Empleado',
+                3 => 'Visitante',
+                default => 'Desconocido',
+            };
+        };
+
+        // Totales por rol
+        $totales = [
+            'total'     => count($usuarios),
+            'admin'     => count(array_filter($usuarios, fn($u) => (int)($u['cod_permiso'] ?? 0) === 1)),
+            'empleado'  => count(array_filter($usuarios, fn($u) => (int)($u['cod_permiso'] ?? 0) === 2)),
+            'visitante' => count(array_filter($usuarios, fn($u) => (int)($u['cod_permiso'] ?? 0) === 3)),
+        ];
+
+        // Agrupar usuarios por rol (1,2,3) ya con etiqueta
+        $porRol = [
+            'Administrador' => array_values(array_filter($usuarios, fn($u) => (int)($u['cod_permiso'] ?? 0) === 1)),
+            'Empleado'      => array_values(array_filter($usuarios, fn($u) => (int)($u['cod_permiso'] ?? 0) === 2)),
+            'Visitante'     => array_values(array_filter($usuarios, fn($u) => (int)($u['cod_permiso'] ?? 0) === 3)),
+        ];
+
+        return view('usuarios_dashboard', compact('totales', 'porRol'));
+    }
+
     // Stubs (si los necesitas)
     public function create(){}
     public function show(string $id){}
