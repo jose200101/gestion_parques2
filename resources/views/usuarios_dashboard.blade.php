@@ -120,7 +120,7 @@
     <div class="col-12 col-md-4">
         <div class="card h-100">
             <div class="card-header bg-white">
-                <strong style="color:#28a745">Usuarios por permiso</strong>
+                <strong style="color:#28a745">Usuarios Por Permisos</strong>
             </div>
             <div class="card-body">
                 <canvas id="chartRoles" height="150"></canvas>
@@ -131,7 +131,7 @@
     <div class="col-12 col-md-4">
         <div class="card h-100">
             <div class="card-header bg-white">
-                <strong style="color:#28a745">Primer acceso (1 = sí, 0 = no)</strong>
+                <strong style="color:#28a745">Primer Acceso</strong>
             </div>
             <div class="card-body">
                 <canvas id="chartPrimerAcceso" height="150"></canvas>
@@ -142,7 +142,7 @@
     <div class="col-12 col-md-4">
         <div class="card h-100">
             <div class="card-header bg-white">
-                <strong style="color:#28a745">Usuarios por estado</strong>
+                <strong style="color:#28a745">Usuarios Por Estado</strong>
             </div>
             <div class="card-body">
                 <canvas id="chartEstado" height="150"></canvas>
