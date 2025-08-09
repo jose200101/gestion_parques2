@@ -37,5 +37,8 @@ Route::middleware('api_auth')->group(function () {
     Route::delete('/usuarios/{id}', [UsuariosController::class, 'destroy'])->name('usuarios.destroy');
     Route::get('/usuarios/dashboard', [App\Http\Controllers\UsuariosController::class, 'dashboard']);
 
+    //Ruta vista del perfil
+    Route::get('/perfil', [UsuariosController::class, 'perfil'])->name('perfil');
+
 
 });

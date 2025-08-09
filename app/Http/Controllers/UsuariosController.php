@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class UsuariosController extends Controller
@@ -215,6 +216,53 @@ class UsuariosController extends Controller
 
         return view('usuarios_dashboard', compact('totales', 'porRol'));
     }
+
+    public function perfil()
+        {
+            // 1) Intentamos tomar el usuario autenticado de Laravel (si lo usas)
+            $username = null;
+            if (Auth::check()) {
+                // Ajusta aquí según tu tabla de users de Laravel (name, email, username, etc.)
+                $username = Auth::user()->name ?? Auth::user()->email ?? null;
+            }
+
+            // 2) Si no hay Auth, probamos con algo guardado en sesión (si tu login lo guarda)
+            if (!$username) {
+                $username = session('nombre_usuario');
+            }
+
+            // 3) Buscamos al usuario en tu backend Node
+            $user = null;
+            $permisoNombre = null;
+
+            $resp = Http::get('http://localhost:3000/usuarios');
+            if ($resp->ok()) {
+                $usuarios = $resp->json();
+
+                if ($username) {
+                    $user = collect($usuarios)->firstWhere('nombre_usuario', $username);
+                }
+
+                // Si no hay username (no hay login real), toma el primero solo para demo
+                if (!$user && !empty($usuarios)) {
+                    $user = $usuarios[0];
+                }
+
+                if ($user) {
+                    $permiso = (int)($user['cod_permiso'] ?? 0);
+                    $permisoNombre = [
+                        1 => 'Administrador',
+                        2 => 'Empleado',
+                        3 => 'Visitante',
+                    ][$permiso] ?? 'Desconocido';
+                }
+            }
+
+            return view('perfil', [
+                'user' => $user,
+                'permisoNombre' => $permisoNombre,
+            ]);
+        }
 
     // Stubs (si los necesitas)
     public function create(){}
