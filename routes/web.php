@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuariosController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ParquesController;
+use App\Http\Controllers\ParquesController; //Ana R.Cabrera
+use App\Http\Controllers\MantenimientoController;
+
 
 // Ruta para mostrar el formulario de login
 // Con el nombre 'login', que es usado por el middleware para las redirecciones
@@ -53,3 +55,16 @@ Route::get('/configuracion/admin_backups', function () {
     return view('configuracion.admin_backups');
 })->name('configuracion.admin_backups');
 //RUTAS CONFIGURACION ANDRÉS
+
+// Ruta del listado de Mantenimientos
+Route::get('/mantenimientos/create', function () {
+    return view('mantenimientos.create'); // <-- Asegúrate de tener esta vista
+})->name('mantenimientos.create');
+
+//Ruta de Mantenimientos Carlos.
+Route::get('/mantenimientos', [MantenimientoController::class, 'index'])->name('mantenimientos.index');
+
+// Ruta del listado de Recursos
+Route::get('/recursos', function () {
+    return view('recursos.index');
+})->name('recursos.index');
