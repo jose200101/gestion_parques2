@@ -327,18 +327,27 @@ return [
         ],
 
         // ANA R. CABRERA - Módulo de Gestión de Parques Forestales
-        [
-            'text'      => 'Gestión de Parques',
-            'icon'      => 'fas fa-tree',
-            'url'       => '#',
-            'submenu'   => [
-                [
-                    'text' => 'Listado de Parques',
-                    'route' => 'parques.index', // Se cambió 'url' a 'route' para usar la ruta con nombre
-                    'icon' => 'fas fa-leaf',
-                ],
+    [
+        'text' => 'Gestión de Parques',
+        'icon' => 'fas fa-tree',
+        'url'  => '#',
+        'submenu' => [
+            [
+                'text' => 'Listado de Parques',
+                'route' => 'parques.index', // Se cambió 'url' a 'route' para usar la ruta con nombre
+                'icon' => 'fas fa-leaf',
+            ],
+            // Ana R. Cabrera: Nueva opción para subir imágenes/documentos
+            [
+                'text' => 'Subir Documentos',
+                'url'  => 'parques/documentos/create', // Esta sería la nueva ruta
+                'icon' => 'fas fa-upload', // Icono de carga
             ],
         ],
+    ],
+
+        
+        
        [
            'text' => 'blog',
            'url' => 'admin/blog',
