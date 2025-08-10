@@ -26,12 +26,9 @@ Route::middleware('api_auth')->group(function () {
     // Rutas para la gestión de usuarios
     Route::get('/usuarios', [UsuariosController::class, 'index'])->name('usuarios.index');
 
-    // ANA R. CABRERA - Mantengo Route::resource, pero añado una ruta específica para debugging.
-    // Si esta ruta funciona, el problema está en tu controlador.
-    Route::get('/parques/{parque}/edit', [ParquesController::class, 'edit'])->name('parques.edit');
-
-    // ANA R. CABRERA - Usar resource para el resto de rutas.
-    Route::resource('parques', ParquesController::class)->except(['edit']);
+     // ANA R. CABRERA - Usamos 'Route::resource' para todas las rutas del controlador de parques.
+    // Esto incluye: index, create, store, show, edit, update, y destroy.
+    Route::resource('parques', ParquesController::class);
     
     // Rutas para vistas específicas
     Route::view('/invitado', 'invitado.index')->name('invitado');

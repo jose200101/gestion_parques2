@@ -3,53 +3,54 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-// Ana R. Cabrera - Incluimos Http para hacer peticiones a la API
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log; // Ana R. Cabrera - Importamos la clase Log para registrar eventos
 
 class ParquesController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Muestra una lista de los recursos (parques).
      */
     public function index()
     {
         // Ana R. Cabrera - Realizamos la petición GET a la API para obtener el listado de parques
-        $response = Http::get('http://localhost:3000/parques');
+        try {
+            $response = Http::get('http://localhost:3000/parques');
 
-        // Ana R. Cabrera - Verificamos si la petición fue exitosa (código 200)
-        if ($response->successful()) {
-            // Ana R. Cabrera - Obtenemos los datos JSON como un array asociativo
-            $parques = $response->json();
-
-            // Ana R. Cabrera - Enviamos los datos a la vista 'parques_index'
-            // Se ha modificado para que coincida con el nombre del archivo 'parques_index.blade.php'
-            return view('parques_index', ['ResulParques' => $parques]);
-        } else {
-            // Ana R. Cabrera - En caso de error, manejamos la respuesta y enviamos una lista vacía
-            // Usamos el mismo nombre de vista y pasamos el error para que se pueda mostrar.
-            return view('parques_index', ['ResulParques' => []])->with('error', 'No se pudieron obtener los datos de la API.');
+            // Ana R. Cabrera - Verificamos si la petición fue exitosa (código 200)
+            if ($response->successful()) {
+                // Obtenemos los datos JSON como un array asociativo
+                $parques = $response->json();
+                // Enviamos los datos a la vista 'parques.parques_index'
+                return view('parques.parques_index', ['ResalParques' => $parques]);
+            } else {
+                // En caso de error, registramos el problema y enviamos una lista vacía
+                Log::error('API Error al obtener parques: ' . $response->status() . ' - ' . $response->body());
+                return view('parques.parques_index', ['ResalParques' => []])->with('error', 'No se pudieron obtener los datos de la API.');
+            }
+        } catch (\Exception $e) {
+            // Si hay un error de conexión, lo registramos
+            Log::error('Error de conexión con la API: ' . $e->getMessage());
+            return view('parques.parques_index', ['ResalParques' => []])->with('error', 'Error al conectar con la API.');
         }
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Muestra el formulario para crear un nuevo recurso.
      */
     public function create()
     {
         // Ana R. Cabrera - Muestra el formulario para crear un nuevo parque
-        // Se ha modificado para que coincida con el nombre del archivo 'parques_create.blade.php'
-        return view('parques_create');
+        return view('parques.parques_create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Almacena un recurso recién creado en la base de datos.
      */
     public function store(Request $request)
     {
         // Ana R. Cabrera - Lógica para guardar un nuevo parque usando la API
         try {
-            // Creamos un array con los datos del formulario, asegurando que los nombres de las
-            // claves coincidan exactamente con las columnas de la base de datos.
             $data = [
                 'nombre_parque' => $request->input('nombre_parque'),
                 'ubicacion_parque' => $request->input('ubicacion_parque'),
@@ -62,72 +63,108 @@ class ParquesController extends Controller
             if ($response->successful()) {
                 return redirect()->route('parques.index')->with('success', 'Parque creado con éxito.');
             } else {
+                Log::error('API Error al crear parque: ' . $response->status() . ' - ' . $response->body());
                 return back()->with('error', 'No se pudo crear el parque.');
             }
         } catch (\Exception $e) {
+            Log::error('Error de conexión al crear parque: ' . $e->getMessage());
             return back()->with('error', 'Error al conectar con la API: ' . $e->getMessage());
         }
     }
 
     /**
-     * Display the specified resource.
+     * Muestra el recurso especificado.
      */
     public function show(string $cod_parque)
     {
         // Ana R. Cabrera - Lógica para mostrar los detalles de un parque específico
-        $response = Http::get("http://localhost:3000/parques/{$cod_parque}");
+        try {
+            $response = Http::get("http://localhost:3000/parques/{$cod_parque}");
 
-        if ($response->successful()) {
-            $parque = $response->json();
-            // Se ha modificado para que coincida con el nombre del archivo 'parques_show.blade.php'
-            return view('parques_show', ['parque' => $parque]);
-        } else {
-            return back()->with('error', 'No se pudo obtener el parque.');
+            if ($response->successful()) {
+                $parque = $response->json();
+                return view('parques.parques_show', ['parque' => $parque]);
+            } else {
+                Log::error('API Error al mostrar parque: ' . $response->status() . ' - ' . $response->body());
+                return back()->with('error', 'No se pudo obtener el parque.');
+            }
+        } catch (\Exception $e) {
+            Log::error('Error de conexión al mostrar parque: ' . $e->getMessage());
+            return back()->with('error', 'Error al conectar con la API.');
         }
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Muestra el formulario para editar un recurso.
      */
     public function edit(string $cod_parque)
     {
         // Ana R. Cabrera - Lógica para mostrar el formulario de edición de un parque
-        $response = Http::get("http://localhost:3000/parques/{$cod_parque}");
+        try {
+            $response = Http::get("http://localhost:3000/parques/{$cod_parque}");
 
-        if ($response->successful()) {
-            // ANA R. CABRERA - La respuesta de la API para un solo recurso
-            // a menudo viene dentro de un array. Aseguramos que solo tomamos el primer elemento.
-            $parque = $response->json()[0];
-
-            // Se ha modificado para que coincida con el nombre del archivo 'parques_edit.blade.php'
-            return view('parques_edit', ['parque' => $parque]);
-        } else {
-            return back()->with('error', 'No se pudo obtener el parque para editar.');
+            if ($response->successful()) {
+                // ANA R. CABRERA - La respuesta de la API para un solo recurso
+                // a menudo viene dentro de un array. Aseguramos que solo tomamos el primer elemento.
+                $parque = $response->json()[0];
+                return view('parques.parques_edit', ['parque' => $parque]);
+            } else {
+                Log::error('API Error al editar parque: ' . $response->status() . ' - ' . $response->body());
+                return back()->with('error', 'No se pudo obtener el parque para editar.');
+            }
+        } catch (\Exception $e) {
+            Log::error('Error de conexión al editar parque: ' . $e->getMessage());
+            return back()->with('error', 'Error al conectar con la API.');
         }
     }
 
     /**
-     * Update the specified resource in storage.
+     * Actualiza el recurso especificado en la base de datos.
      */
     public function update(Request $request, string $cod_parque)
     {
         // Ana R. Cabrera - Lógica para actualizar un parque usando la API
-        $response = Http::put("http://localhost:3000/parques/{$cod_parque}", $request->all());
+        try {
+            $response = Http::put("http://localhost:3000/parques/{$cod_parque}", $request->all());
 
-        if ($response->successful()) {
-            return redirect()->route('parques.index')->with('success', 'Parque actualizado con éxito.');
-        } else {
-            return back()->with('error', 'No se pudo actualizar el parque.');
+            if ($response->successful()) {
+                return redirect()->route('parques.index')->with('success', 'Parque actualizado con éxito.');
+            } else {
+                Log::error('API Error al actualizar parque: ' . $response->status() . ' - ' . $response->body());
+                return back()->with('error', 'No se pudo actualizar el parque.');
+            }
+        } catch (\Exception $e) {
+            Log::error('Error de conexión al actualizar parque: ' . $e->getMessage());
+            return back()->with('error', 'Error al conectar con la API.');
         }
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Elimina el recurso especificado de la base de datos.
      */
-    // Ana R. Cabrera - Este método se ha dejado vacío porque no tenemos un proceso de eliminación
-    public function destroy(string $id)
+    public function destroy(string $cod_parque)
     {
-        // No se implementa la lógica de eliminación
+        // Ana R. Cabrera - Lógica para eliminar un parque usando la API.
+        try {
+            // Realizamos la petición DELETE a la API para eliminar el parque por su código
+            $response = Http::delete("http://localhost:3000/parques/{$cod_parque}");
+            
+            // Ana R. Cabrera - Registramos la respuesta completa de la API para depuración
+            Log::info("Respuesta de la API para DELETE parque {$cod_parque}: " . $response->body());
+
+            // Verificamos si la petición fue exitosa
+            if ($response->successful()) {
+                return redirect()->route('parques.index')->with('success', 'Parque eliminado correctamente.');
+            } else {
+                // Si hubo un error en la API, volvemos a la página anterior con un mensaje de error
+                Log::error('API Error al eliminar parque: ' . $response->status() . ' - ' . $response->body());
+                return back()->with('error', 'No se pudo eliminar el parque desde la API.');
+            }
+        } catch (\Exception $e) {
+            // Capturamos cualquier error de conexión y lo mostramos
+            Log::error('Error de conexión al eliminar parque: ' . $e->getMessage());
+            return back()->with('error', 'Error al conectar con la API: ' . $e->getMessage());
+        }
     }
 }
 
