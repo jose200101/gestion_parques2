@@ -32,10 +32,11 @@
                                     <th>Ruta del Archivo</th>
                                     <th>Tipo</th>
                                     <th>Usuario</th>
-                                    <th style="width: 120px;">Acciones</th> </tr>
+                                    <th style="width: 120px;">Acciones</th>
+                                </tr>
                             </thead>
                             <tbody>
-                                </tbody>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -87,7 +88,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" id="saveBackupBtn" class="btn btn-success"">
+                        <button type="submit" id="saveBackupBtn" class="btn btn-success">
                             <span id="saveBackupText">Guardar Backup</span>
                             <span id="saveBackupSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display:none;"></span>
                         </button>
@@ -153,9 +154,44 @@
 
 @push('js')
     <script>
+        // ==================== Funciones de "eliminar" registro (solo visualmente) ====================
+        function getEliminadosBackups() {
+            try {
+                // Intenta obtener la lista de IDs eliminados del localStorage
+                const arr = JSON.parse(localStorage.getItem('eliminados_backups') || '[]');
+                // Normaliza todos los valores a string para evitar problemas de tipos
+                return new Set(arr.map(v => String(v)));
+            } catch {
+                // En caso de error, devuelve un Set vacío
+                return new Set();
+            }
+        }
+
+        function setEliminadosBackups(set) {
+            // Guarda la lista de IDs eliminados en localStorage
+            localStorage.setItem('eliminados_backups', JSON.stringify([...set].map(v => String(v))));
+        }
+
+        function eliminarBackup(id, btn) {
+            if (!confirm('¿Está seguro de ELIMINAR este backup de la lista? ')) {
+                return;
+            }
+            
+            // Elimina visualmente la fila de la tabla
+            const tr = btn.closest('tr');
+            if (tr) tr.remove();
+            
+            // Añade el ID del registro a la lista de eliminados en localStorage
+            const eliminados = getEliminadosBackups();
+            eliminados.add(String(id));
+            setEliminadosBackups(eliminados);
+
+            toastr.info('Registro eliminado con éxito.');
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             // URL de tu API (Asegúrate de que sea la correcta)
-            const apiURL = 'http://localhost:3000/backups'; 
+            const apiURL = 'http://localhost:3000/backups';
             
             const tableBody = document.querySelector('#backupsTable tbody');
             const addBackupForm = document.getElementById('addBackupForm');
@@ -165,7 +201,10 @@
             let originalBackupData = {};
 
             // Función para cargar los datos desde la API
-           function loadBackups() {
+            function loadBackups() {
+                // Obtiene la lista de backups eliminados antes de hacer la llamada a la API
+                const eliminados = getEliminadosBackups();
+
                 fetch(apiURL)
                     .then(response => {
                         if (!response.ok) {
@@ -178,12 +217,16 @@
                         if ($.fn.DataTable.isDataTable('#backupsTable')) {
                             $('#backupsTable').DataTable().destroy();
                         }
+                        
+                        // Filtra los registros que están en la lista de eliminados
+                        const dataFiltrada = data.filter(backup => !eliminados.has(String(backup.cod_backup)));
 
-                        document.getElementById('backupCount').innerText = data.length;
+                        document.getElementById('backupCount').innerText = dataFiltrada.length;
 
                         tableBody.innerHTML = '';
                         
-                        data.forEach(backup => {
+                        // Itera sobre los datos ya filtrados
+                        dataFiltrada.forEach(backup => {
                             const row = document.createElement('tr');
                             const fecha = new Date(backup.fecha_backup).toISOString().split('T')[0];
                             row.innerHTML = `
@@ -195,6 +238,10 @@
                                 <td class="text-center">
                                     <button class="btn btn-warning btn-sm btn-edit font-weight-bold" data-cod-backup="${backup.cod_backup}">
                                         Modificar
+                                    </button>
+                                    {{-- Nuevo botón para eliminar el registro --}}
+                                    <button class="btn btn-danger btn-sm btn-delete font-weight-bold" onclick="eliminarBackup(${backup.cod_backup}, this)">
+                                        Eliminar
                                     </button>
                                 </td>
                             `;
@@ -217,7 +264,6 @@
                         console.error('Hubo un problema con la petición fetch:', error);
                         tableBody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error al cargar los datos. Por favor, revisa la consola para más detalles.</td></tr>`;
                     });
-
             }
 
             // Escuchar el evento de envío del formulario de AGREGAR

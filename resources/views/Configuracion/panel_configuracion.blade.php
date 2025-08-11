@@ -42,14 +42,14 @@
                     <div class="card-tools">
                         {{-- Puedes agregar un botón para forzar un backup manual --}}
                         <button class="btn btn-primary btn-sm" id="btnCrearBackup">
-                            <i class="fas fa-database"></i> Crear Backup Manual
+                            <i class="fas fa-database"></i> Crear Backup Automatico
                         </button>
                     </div>
                 </div>
                 <div class="card-body">
                     <p>
-                        Acciones clave de administración para el sistema. Puedes realizar tareas como
-                        la creación manual de backups en cualquier momento.
+                        Accion clave de administración para el sistema. Puedes realizar
+                        la creación automatica de backups en cualquier momento.
                     </p>
                 </div>
             </div>
@@ -71,7 +71,6 @@
                 <div class="card-body">
                     <p>
                         Verifica el estado de la conexión a la base de datos para diagnosticar posibles problemas.
-                        La conexión es esencial para el correcto funcionamiento del sistema.
                     </p>
                     <div class="mt-4">
                         <strong>Estado de Conexión:</strong>
@@ -92,7 +91,7 @@
             const apiURL = 'http://localhost:3000/backups'; // Asegúrate de que esta URL sea la correcta
 
             btnCrearBackup.addEventListener('click', function() {
-                if (confirm('¿Estás seguro de que quieres crear un backup manual?')) {
+                if (confirm('¿Estás seguro de que quieres crear un backup automatico?')) {
 
                     // Obtenemos los datos necesarios para el backup
                     // En un escenario real, estos datos podrían venir de inputs o del usuario autenticado
@@ -100,7 +99,7 @@
                         cod_backup: Math.floor(Math.random() * 1000) + 1, // Ejemplo de ID, idealmente lo maneja la DB
                         fecha_backup: new Date().toISOString().slice(0, 10), // Fecha actual
                         ruta_archivo: '/backups/manual_backup_' + new Date().getTime() + '.sql', // Ruta de archivo dinámica
-                        tipo_backup: 'Manual', // Tipo de backup
+                        tipo_backup: 'Automatico', // Tipo de backup
                         cod_usuario: 1 // Asumimos que el usuario 1 es el que lo crea, esto debería ser dinámico
                     };
 
