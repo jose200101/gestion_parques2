@@ -89,20 +89,20 @@
                         <td>{{ $usuario['cod_bitacora'] ?? 'N/A' }}</td>
                         <td>
                             <!-- Botón Editar -->
-                            <button class="btn btn-warning btn-sm"
+                            <button class="btn btn-info  btn-sm"
                                 data-bs-toggle="modal" data-bs-target="#modalEditar"
                                 onclick="cargarDatosEditar({{ json_encode($usuario) }})">
                                 Editar
                             </button>
 
-                            <!-- Botón Eliminar -->
+                            <!-- Botón Inactivar -->
                             <form action="{{ route('usuarios.destroy', $usuario['cod_usuario']) }}"
                                 method="POST"
                                 style="display:inline-block;"
-                                onsubmit="return confirm('¿Seguro que deseas eliminar este usuario?');">
+                                onsubmit="return confirm('¿Seguro que deseas inactivar este usuario?');">
                                 @csrf
                                 @method('DELETE')
-                                <button class="btn btn-danger btn-sm">Eliminar</button>
+                                <button class="btn btn-secondary btn-sm">Inactivar</button>
                             </form>
                         </td>
                     </tr>
