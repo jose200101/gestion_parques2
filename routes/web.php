@@ -36,7 +36,6 @@ Route::middleware('api_auth')->group(function () {
     // Ruta de Logout
     // Esta ruta invalida la sesión y redirige al login
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-<<<<<<< HEAD
 
     //Ruta usuarios y vista con tabla + modal
     Route::get('/usuarios', [UsuariosController::class, 'index'])->name('usuarios.index');
@@ -52,8 +51,6 @@ Route::middleware('api_auth')->group(function () {
     Route::get('/cambiar-password', [UsuariosController::class, 'mostrarCambioPassword'])->name('usuarios.cambio-password');
     Route::post('/cambiar-password', [UsuariosController::class, 'cambiarPassword'])->name('usuarios.cambiar-password');
 
-});
-=======
 });
 
 //RUTAS CONFIGURACION ANDRÉS
@@ -83,4 +80,3 @@ Route::get('/mantenimientos', [MantenimientoController::class, 'index'])->name('
 Route::get('/recursos', function () {
     return view('recursos.index');
 })->name('recursos.index');
->>>>>>> 9d9c44fb4d9224c6e5a5800dc3328ce96d52d678
