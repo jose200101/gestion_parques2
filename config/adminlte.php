@@ -299,7 +299,6 @@ return [
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Menu-Configuration
     |
     */
-
     'menu' => [
        // Navbar items:
     // --- NUEVA ENTRADA PARA EL BOTÓN DE CERRAR SESIÓN ---
@@ -310,29 +309,31 @@ return [
         'topnav_right' => true,
     ],
     // ------------------------------------
-        // Navbar items:
+
+    //DARRRRRRRRRRRRRRRREL
+
+     ['header' => 'AJUSTES DE PERFIL'],
         [
-            'type' => 'navbar-search',
-            'text' => 'search',
-            'topnav_right' => true,
+            'text' => 'Perfil',
+            'url' => 'perfil',
+            'icon' => 'fas fa-fw fa-user',
         ],
         [
-            'type' => 'fullscreen-widget',
-            'topnav_right' => true,
+            'text' => 'Cambiar contraseña',
+            'url' => 'cambiar-password',
+            'icon' => 'fas fa-fw fa-lock',
         ],
-        
-        // --- NUEVA ENTRADA PARA EL BOTÓN DE CERRAR SESIÓN ---
+
         [
-            'text' => 'Cerrar Sesión',
-            'url'  => 'logout', // URL de la ruta de logout
-            'icon' => 'fas fa-fw fa-power-off text-danger',
-            'topnav_right' => true,
+            'text' => 'Usuarios',
+            'url'  => 'usuarios',
+            'icon' => 'fas fa-users',
         ],
-        // ------------------------------------
-        // Sidebar items:
+
         [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
+            'text' => 'Dashboard usuarios',
+            'url'  => 'usuarios/dashboard', 
+            'icon' => 'fas fa-chart-pie',
         ],
 
         // ANA R. CABRERA - Módulo de Gestión de Parques Forestales
@@ -354,63 +355,6 @@ return [
             ],
         ],
     ],
-
-        
-        
-       [
-           'text' => 'blog',
-           'url' => 'admin/blog',
-           'can' => 'manage-blog',
-       ],
-       [
-           'text' => 'pages',
-           'url' => 'admin/pages',
-           'icon' => 'far fa-fw fa-file',
-           'label' => 4,
-           'label_color' => 'success',
-       ],
-       ['header' => 'account_settings'],
-       [
-           'text' => 'profile',
-           'url' => 'admin/settings',
-           'icon' => 'fas fa-fw fa-user',
-       ],
-       [
-           'text' => 'change_password',
-           'url' => 'admin/settings',
-           'icon' => 'fas fa-fw fa-lock',
-       ],
-       [
-           'text' => 'Reportes',
-           'icon' => 'fas fa-fw fa-chart-bar', // He usado un ícono más apropiado para reportes
-           'submenu' => [
-               [
-                   'text' => 'Reportes Ambientales',
-                   'url' => '/reportes/ambientales',
-                   'icon' => 'far fa-circle',
-               ],
-               [
-                   'text' => 'Reportes de Empleados',
-                   'url' => '/reportes/empleados',
-                   'icon' => 'far fa-circle',
-               ],
-               [
-                   'text' => 'Reportes de Clientes',
-                   'url' => '/reportes/clientes',
-                   'icon' => 'far fa-circle',
-               ],
-               [
-                   'text' => 'Reportes de Recursos del Parque',
-                   'url' => '/reportes/recursos',
-                   'icon' => 'far fa-circle',
-               ],
-               [
-                   'text' => 'Reportes de Eventos Ambientales',
-                   'url' => '/reportes/eventos',
-                   'icon' => 'far fa-circle',
-               ],
-           ],
-       ],
        [
     'text' => 'Mantenimientos',
     'icon' => 'fas fa-tools',
@@ -421,22 +365,6 @@ return [
     'icon' => 'fas fa-boxes',
     'url'  => 'recursos',
 ],
-       ['header' => 'labels'],
-       [
-           'text' => 'important',
-           'icon_color' => 'red',
-           'url' => '#',
-       ],
-       [
-           'text' => 'warning',
-           'icon_color' => 'yellow',
-           'url' => '#',
-       ],
-       [
-           'text' => 'information',
-           'icon_color' => 'cyan',
-           'url' => '#',
-       ],
        //AGREGAR CONFIGURACION EN BARRA LATERAL ANDRÉS
         ['header' => 'CONFIGURACION'],
         [
@@ -459,30 +387,6 @@ return [
             'text' => 'blog',
             'url' => 'admin/blog',
             'can' => 'manage-blog',
-        ],
-        
-        ['header' => 'AJUSTES'],
-        [
-            'text' => 'Perfil',
-            'url' => 'perfil',
-            'icon' => 'fas fa-fw fa-user',
-        ],
-        [
-            'text' => 'Cambiar contraseña',
-            'url' => 'cambiar-password',
-            'icon' => 'fas fa-fw fa-lock',
-        ],
-
-        [
-            'text' => 'Usuarios',
-            'url'  => 'usuarios',
-            'icon' => 'fas fa-users',
-        ],
-
-        [
-            'text' => 'Dashboard usuarios',
-            'url'  => 'usuarios/dashboard', 
-            'icon' => 'fas fa-chart-pie',
         ],
 
         [
