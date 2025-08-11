@@ -191,7 +191,7 @@ return [
     */
 
     //INSERTO CODIGO PARA CUADRAR EL LAYOUT ANDRES
-    'classes_body' => 'layout-fixed sidebar-mini sidebar-collapse',
+    'classes_body' => 'layout-fixed sidebar-mini',
     //FIN CODIGO ANDRES
     'classes_brand' => '',
     'classes_brand_text' => '',
@@ -323,7 +323,7 @@ return [
             'url' => 'cambiar-password',
             'icon' => 'fas fa-fw fa-lock',
         ],
-
+     ['header' => 'GESTIÓN DE USUARIOS'],
         [
             'text' => 'Usuarios',
             'url'  => 'usuarios',
@@ -335,6 +335,8 @@ return [
             'url'  => 'usuarios/dashboard', 
             'icon' => 'fas fa-chart-pie',
         ],
+
+     ['header' => 'PARQUES'],
 
         // ANA R. CABRERA - Módulo de Gestión de Parques Forestales
     [
