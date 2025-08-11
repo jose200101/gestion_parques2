@@ -1,271 +1,287 @@
-@extends('adminlte::page')
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subir Archivos del Parque Forestal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        #drop-zone {
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+        #drop-zone.highlight {
+            border-color: #3b82f6;
+            background-color: #e0f2fe;
+        }
+        .spinner {
+            border-top-color: #3b82f6;
+            -webkit-animation: spin 1s linear infinite;
+            animation: spin 1s linear infinite;
+        }
+        @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="p-8 flex items-center justify-center min-h-screen">
 
-@section('title', 'Subir Archivos')
+<div class="max-w-md w-full space-y-8">
+    <h1 class="text-3xl font-bold text-gray-800 text-center">Subir Archivos del Parque Forestal</h1>
 
-@section('content_header')
-    <h1 class="text-3xl font-weight-bold text-dark">Subir Archivos a un Parque Forestal</h1>
-@stop
+    <div class="space-y-8">
+        <div class="bg-white shadow-xl rounded-lg overflow-hidden">
+            <div class="bg-blue-600 text-white p-4 font-bold text-lg text-center">
+                Subir Documentos del Parque
+            </div>
+            <form id="uploadForm" action="/archivos/store" method="POST" enctype="multipart/form-data" class="p-6">
+                <div class="mb-4">
+                    <label for="cod_parque" class="block text-sm font-medium text-gray-700">Seleccione el Parque</label>
+                    <select id="cod_parque" name="cod_parque" required
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        <option value="" disabled selected>-- Seleccionar Parque --</option>
+                        @foreach ($parques as $parque)
+                            <option value="{{ $parque->id }}">{{ $parque->nombre }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-@section('content')
-    <div class="card card-primary card-outline shadow-lg">
-        <div class="card-body">
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h5><i class="icon fas fa-check"></i> Éxito!</h5>
-                    {{ session('success') }}
-                </div>
-            @endif
+                <div id="drop-zone"
+                     class="mt-3 p-8 border-2 border-dashed border-gray-300 rounded-lg text-center text-gray-500 hover:border-blue-500 hover:bg-blue-50">
+                    <p class="mb-2">Arrastra tus archivos aquí o haz clic para seleccionar</p>
+                    <input type="file" id="file-input" name="documentos[]" multiple hidden>
+                </div>
 
-            <form id="upload-form" action="{{ route('archivos.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
+                <div id="file-list" class="mt-4 space-y-2">
+                </div>
 
-                <!-- Paso 1 - Selección del Parque -->
-                <div class="form-group">
-                    <label for="parque-select">Seleccione el Parque:</label>
-                    <select id="parque-select" name="cod_parque" class="form-control select2bs4" style="width: 100%;">
-                        <option value="">-- Seleccionar Parque --</option>
-                        @foreach($parques as $parque)
-                            <option value="{{ $parque['cod_parque'] }}">{{ $parque['nombre_parque'] }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                <div class="mt-6 text-center">
+                    <button type="submit"
+                            class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                        Guardar Archivos
+                    </button>
+                </div>
+            </form>
+        </div>
 
-                <!-- Paso 2 - Área de Carga de Archivos -->
-                <div id="upload-area" class="border border-dashed p-5 text-center bg-light rounded" style="display:none; cursor: pointer;">
-                    <i class="fas fa-cloud-upload-alt fa-3x mb-3 text-primary"></i>
-                    <p class="text-muted font-weight-bold">Arrastre y suelte archivos aquí o haga clic para seleccionarlos</p>
-                    <input type="file" id="file-input" name="documento[]" style="display:none;" multiple>
-                </div>
+        <div class="bg-white shadow-xl rounded-lg overflow-hidden">
+            <div class="bg-teal-600 text-white p-4 font-bold text-lg text-center">
+                Archivos del Parque Seleccionado
+            </div>
+            <div id="archivos-existentes" class="p-6 text-center text-gray-500">
+                Seleccione un parque para ver sus archivos.
+            </div>
+        </div>
+    </div>
+</div>
 
-                <!-- Sección para mostrar la vista previa de los archivos -->
-                <div id="preview-area" class="mt-4 row">
-                    <!-- Los archivos se renderizarán aquí -->
-                </div>
-                
-                <div class="mt-4 text-right">
-                    <button type="submit" class="btn btn-primary" id="submit-button" disabled>
-                        <i class="fas fa-upload mr-2"></i> Subir Documentos
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Nueva sección para mostrar los archivos existentes -->
-    <div class="card card-secondary card-outline shadow-lg mt-5">
-        <div class="card-header">
-            <h2 class="card-title font-weight-bold">Archivos Existentes</h2>
-        </div>
-        <div class="card-body" id="existing-files-area">
-            <p class="text-muted">Seleccione un parque para ver los archivos existentes.</p>
-        </div>
-    </div>
-@stop
-
-@section('js')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const parqueSelect = document.getElementById('parque-select');
-            const uploadArea = document.getElementById('upload-area');
-            const fileInput = document.getElementById('file-input');
-            const previewArea = document.getElementById('preview-area');
-            const submitButton = document.getElementById('submit-button');
-            const existingFilesArea = document.getElementById('existing-files-area');
-            
-            // Este es el array que ahora almacena todos los archivos
-            let selectedFiles = new DataTransfer();
-
-            // Inicializar Select2 para el menú desplegable
-            $('.select2bs4').select2({
-                theme: 'bootstrap4'
-            });
-            
-            // Función para verificar el estado del formulario y habilitar/deshabilitar el botón
-            function checkFormStatus() {
-                // El botón se habilita solo si hay un parque seleccionado Y archivos en el array
-                submitButton.disabled = !(parqueSelect.value && selectedFiles.files.length > 0);
-            }
-
-            // Llamar a checkFormStatus al cargar la página para el estado inicial del botón
-            checkFormStatus();
-
-            parqueSelect.addEventListener('change', function() {
-                if (parqueSelect.value) {
-                    uploadArea.style.display = 'block';
-                    fetchExistingFiles(parqueSelect.value);
-                } else {
-                    uploadArea.style.display = 'none';
-                    existingFilesArea.innerHTML = '<p class="text-muted">Seleccione un parque para ver los archivos existentes.</p>';
-                }
-                // Limpiar la vista previa y el array de archivos cuando se cambia de parque
-                previewArea.innerHTML = '';
-                fileInput.value = ''; // Esto es importante para limpiar el input de tipo file
-                selectedFiles = new DataTransfer(); // Reiniciar el array
-                checkFormStatus();
-            });
-
-            // Nueva función para obtener y mostrar los archivos existentes
-            function fetchExistingFiles(cod_parque) {
-                // Aquí deberías hacer una llamada AJAX a tu API
-                // Por ahora, simularemos una respuesta
-                existingFilesArea.innerHTML = '<p class="text-center"><i class="fas fa-sync-alt fa-spin"></i> Cargando archivos...</p>';
-
-                // Simulación de una respuesta de la API
-                setTimeout(() => {
-                    const mockFiles = [
-                        { name: 'documento_parque_A.pdf', type: 'application/pdf', url: '#' },
-                        { name: 'mapa_parque.jpg', type: 'image/jpeg', url: '#' },
-                        { name: 'video_presentacion.mp4', type: 'video/mp4', url: '#' },
-                        { name: 'reglamento.docx', type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', url: '#' },
-                        { name: 'plantilla.xlsx', type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', url: '#' }
-                    ];
-
-                    existingFilesArea.innerHTML = '';
-                    const fileGrid = document.createElement('div');
-                    fileGrid.className = 'row';
-
-                    if (mockFiles.length > 0) {
-                        mockFiles.forEach(file => {
-                            let fileIcon = 'fas fa-file text-secondary';
-                            const maxFilenameLength = 20;
-                            const displayName = file.name.length > maxFilenameLength ?
-                                file.name.substring(0, maxFilenameLength) + '...' : file.name;
-
-                            if (file.type.startsWith('image/')) {
-                                fileIcon = 'fas fa-file-image text-info';
-                            } else if (file.type === 'application/pdf') {
-                                fileIcon = 'fas fa-file-pdf text-danger';
-                            } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || file.type === 'application/msword') {
-                                fileIcon = 'fas fa-file-word text-primary';
-                            } else if (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || file.type === 'application/vnd.ms-excel') {
-                                fileIcon = 'fas fa-file-excel text-success';
-                            } else if (file.type.startsWith('video/')) {
-                                fileIcon = 'fas fa-file-video text-warning';
-                            }
-
-                            const fileItem = document.createElement('div');
-                            fileItem.className = 'col-md-3 mb-3';
-                            fileItem.innerHTML = `
-                                <div class="card p-2 text-center h-100">
-                                    <div class="d-flex justify-content-center align-items-center" style="height: 100px; overflow: hidden;">
-                                        <i class="${fileIcon} fa-3x mb-2"></i>
-                                    </div>
-                                    <div class="card-body p-2">
-                                        <p class="card-text text-truncate font-weight-bold mt-2 mb-0">${displayName}</p>
-                                        <a href="${file.url}" class="btn btn-sm btn-info mt-2" download>
-                                            <i class="fas fa-download mr-1"></i> Descargar
-                                        </a>
-                                    </div>
-                                </div>
-                            `;
-                            fileGrid.appendChild(fileItem);
-                        });
-                        existingFilesArea.appendChild(fileGrid);
-                    } else {
-                        existingFilesArea.innerHTML = '<p class="text-muted">No hay archivos existentes para este parque.</p>';
-                    }
-                }, 1000);
-            }
-
-            uploadArea.addEventListener('click', () => fileInput.click());
-
-            ['dragover', 'dragleave', 'drop'].forEach(event => {
-                uploadArea.addEventListener(event, e => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (event === 'dragover') {
-                        uploadArea.classList.add('border-primary');
-                        uploadArea.classList.add('bg-white');
-                    } else if (event === 'dragleave' || event === 'drop') {
-                        uploadArea.classList.remove('border-primary');
-                        uploadArea.classList.remove('bg-white');
-                    }
-                    if (event === 'drop') {
-                        addFiles(e.dataTransfer.files);
-                    }
-                });
-            });
-
-            fileInput.addEventListener('change', () => {
-                addFiles(fileInput.files);
-            });
-
-            // Función para agregar los archivos a la lista de seleccionados
-            function addFiles(files) {
-                // Agregar cada archivo de la nueva lista al objeto DataTransfer
-                for (const file of files) {
-                    selectedFiles.items.add(file);
-                }
-                
-                // Asignar los archivos al input para que se envíen con el formulario
-                fileInput.files = selectedFiles.files;
-
-                // Luego, renderizar la vista previa completa desde el array
-                renderPreviews(selectedFiles.files);
-
-                // Actualizar el estado del botón
-                checkFormStatus();
-            }
-
-            function renderPreviews(files) {
-                // Limpiar el área de vista previa antes de renderizar de nuevo
-                previewArea.innerHTML = '';
-                
-                // Iterar sobre todos los archivos en el array
-                for (const file of files) {
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            const fileItem = document.createElement('div');
-                            fileItem.className = 'col-md-3 mb-3';
-
-                            let content = '';
-                            let fileIcon = 'fas fa-file text-secondary';
-                            const maxFilenameLength = 20;
-                            const displayName = file.name.length > maxFilenameLength ?
-                                file.name.substring(0, maxFilenameLength) + '...' : file.name;
-
-                            if (file.type.startsWith('image/')) {
-                                content = `<img src="${e.target.result}" class="img-fluid rounded" alt="${file.name}">`;
-                            } else if (file.type.startsWith('video/')) {
-                                content = `<video src="${e.target.result}" controls class="img-fluid rounded"></video>`;
-                            } else {
-                                if (file.type === 'application/pdf') {
-                                    fileIcon = 'fas fa-file-pdf text-danger';
-                                } else if (file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || file.type === 'application/msword') {
-                                    fileIcon = 'fas fa-file-word text-primary';
-                                } else if (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || file.type === 'application/vnd.ms-excel') {
-                                    fileIcon = 'fas fa-file-excel text-success';
-                                }
-                                content = `<i class="${fileIcon} fa-3x mb-2"></i>`;
-                            }
-
-                            fileItem.innerHTML = `
-                                <div class="card p-2 text-center h-100">
-                                    <div class="d-flex justify-content-center align-items-center" style="height: 100px; overflow: hidden;">
-                                        ${content}
-                                    </div>
-                                    <div class="card-body p-2">
-                                        <p class="card-text text-truncate font-weight-bold mt-2 mb-0">${displayName}</p>
-                                    </div>
-                                </div>
-                            `;
-                            previewArea.appendChild(fileItem);
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                }
-            }
-        });
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-@stop
-
-@section('plugins.FontAwesome', true)
-@section('plugins.Select2', true)
-
-
-
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    
+        // Referencias a los elementos del DOM
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const fileList = document.getElementById('file-list');
+        const parqueSelect = document.getElementById('cod_parque');
+        const archivosExistentes = document.getElementById('archivos-existentes');
+        const uploadForm = document.getElementById('uploadForm');
+    
+        // Usamos un objeto DataTransfer global para manejar los archivos arrastrados y seleccionados
+        let filesToUpload = new DataTransfer();
+    
+        // Manejar el clic en la zona de drag and drop para abrir el selector de archivos
+        dropZone.addEventListener('click', () => fileInput.click());
+    
+        // Event listeners para la funcionalidad de arrastrar y soltar
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+    
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    
+        // Funciones para manejar los efectos visuales
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+    
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+    
+        function highlight() {
+            dropZone.classList.add('highlight');
+        }
+    
+        function unhighlight() {
+            dropZone.classList.remove('highlight');
+        }
+    
+        // Manejar el evento de soltar archivos
+        dropZone.addEventListener('drop', handleDrop, false);
+    
+        function handleDrop(e) {
+            preventDefaults(e);
+            const droppedFiles = e.dataTransfer.files;
+            // La lógica para añadir los archivos se ha unificado en la función `addFilesToUpload`
+            addFilesToUpload(droppedFiles);
+        }
+    
+        // Manejar el cambio del input de archivos
+        fileInput.addEventListener('change', function() {
+            const selectedFiles = this.files;
+            // Limpiamos la lista de archivos anterior para evitar duplicados si se selecciona desde el input
+            filesToUpload = new DataTransfer();
+            addFilesToUpload(selectedFiles);
+        });
+    
+        // Función unificada para añadir archivos a la lista global
+        function addFilesToUpload(files) {
+            Array.from(files).forEach(file => {
+                filesToUpload.items.add(file);
+            });
+            updateFileInput();
+        }
+    
+        // Función para actualizar el input de archivos y la lista visual
+        function updateFileInput() {
+            fileInput.files = filesToUpload.files;
+            renderSelectedFiles();
+        }
+    
+        // Función para mostrar los archivos seleccionados en la UI
+        function renderSelectedFiles() {
+            const files = filesToUpload.files;
+            if (fileList) {
+                fileList.innerHTML = '';
+                Array.from(files).forEach((file, index) => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'flex items-center justify-between p-3 mb-2 rounded-lg bg-gray-100 shadow-sm border border-gray-200';
+                    fileItem.innerHTML = `
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-file text-gray-400"></i>
+                            <div>
+                                <p class="mb-0 font-medium text-gray-800">${file.name}</p>
+                                <small class="text-gray-500">${(file.size / 1024).toFixed(2)} KB</small>
+                            </div>
+                        </div>
+                        <button type="button" class="text-red-500 hover:text-red-700 transition-colors remove-file" data-index="${index}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    `;
+                    fileList.appendChild(fileItem);
+                });
+                // Añadir el listener para los botones de eliminar archivo
+                fileList.querySelectorAll('.remove-file').forEach(button => {
+                    button.addEventListener('click', removeFile);
+                });
+            }
+        }
+    
+        // Función para eliminar un archivo de la lista
+        function removeFile(e) {
+            // Asegurarse de obtener el índice del botón que fue clickeado
+            const indexToRemove = e.target.closest('.remove-file').dataset.index;
+            const newFilesToUpload = new DataTransfer();
+            Array.from(filesToUpload.files).forEach((file, index) => {
+                if (index != indexToRemove) {
+                    newFilesToUpload.items.add(file);
+                }
+            });
+            filesToUpload = newFilesToUpload;
+            updateFileInput();
+        }
+    
+        // Manejar el envío del formulario
+        uploadForm.addEventListener('submit', function(e) {
+            // Validación básica antes de enviar
+            if (filesToUpload.files.length === 0) {
+                e.preventDefault(); // Evitar el envío si no hay archivos
+                alert('Por favor, seleccione al menos un archivo para subir.');
+            }
+            if (!parqueSelect.value) {
+                e.preventDefault();
+                alert('Por favor, seleccione un parque.');
+            }
+        });
+    
+        // Lógica para mostrar archivos existentes
+        parqueSelect.addEventListener('change', function() {
+            const parqueId = this.value;
+            if (parqueId) {
+                fetchArchivos(parqueId);
+            } else {
+                archivosExistentes.innerHTML = '<p class="text-center text-gray-500">Seleccione un parque para ver sus archivos.</p>';
+            }
+        });
+    
+        async function fetchArchivos(parqueId) {
+            archivosExistentes.innerHTML = '<div class="text-center p-6"><i class="fas fa-spinner fa-spin fa-2x text-blue-500"></i></div>';
+            
+            try {
+                // Asume que tu API tiene un endpoint para obtener archivos por parque.
+                const response = await fetch(`http://localhost:3000/parques/${parqueId}/archivos`);
+                
+                if (response.ok) {
+                    const archivos = await response.json();
+                    renderArchivos(archivos);
+                } else {
+                    archivosExistentes.innerHTML = '<p class="text-red-500 text-center">Error al cargar los archivos.</p>';
+                    console.error('Error fetching files:', response.statusText);
+                }
+            } catch (error) {
+                archivosExistentes.innerHTML = '<p class="text-red-500 text-center">Error al conectar con la API.</p>';
+                console.error('Error fetching files:', error);
+            }
+        }
+    
+        function renderArchivos(archivos) {
+            if (archivos.length === 0) {
+                archivosExistentes.innerHTML = '<p class="text-center text-gray-500">No hay archivos para este parque.</p>';
+                return;
+            }
+    
+            archivosExistentes.innerHTML = '';
+            archivos.forEach(archivo => {
+                let iconHtml = '';
+                if (archivo.mimetype.startsWith('image/')) {
+                    iconHtml = '<i class="fas fa-file-image fa-2x text-blue-500 mr-2"></i>';
+                } else if (archivo.mimetype.includes('pdf')) {
+                    iconHtml = '<i class="fas fa-file-pdf fa-2x text-red-500 mr-2"></i>';
+                } else {
+                    iconHtml = '<i class="fas fa-file fa-2x text-gray-400 mr-2"></i>';
+                }
+    
+                const fileItem = document.createElement('div');
+                fileItem.className = 'flex items-center justify-between p-3 mb-2 rounded-lg bg-gray-100 shadow-sm border border-gray-200';
+                fileItem.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        ${iconHtml}
+                        <div>
+                            <p class="mb-0 font-medium text-gray-800">${archivo.nombre}</p>
+                            <small class="text-gray-500">${(archivo.tamano / 1024).toFixed(2)} KB</small>
+                        </div>
+                    </div>
+                    <a href="${archivo.url}" target="_blank" class="text-blue-500 hover:text-blue-700 transition-colors">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                `;
+                archivosExistentes.appendChild(fileItem);
+            });
+        }
+    });
+</script>
+</body>
+</html>

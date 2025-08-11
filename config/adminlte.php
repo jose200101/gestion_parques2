@@ -354,6 +354,12 @@ return [
                 'route' => 'archivos.create', // Se cambió la 'url' por la 'route' correcta
                 'icon' => 'fas fa-upload',
             ],
+
+            [
+            'text' => 'Localización en mapa',
+            'route' => 'parques.mapa',
+            'icon' => 'fas fa-map-marked-alt',
+        ],
         ],
     ],
        [

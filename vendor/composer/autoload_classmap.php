@@ -11,6 +11,7 @@ return array(
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Controllers\\LoginController' => $baseDir . '/app/Http/Controllers/LoginController.php',
     'App\\Http\\Controllers\\MantenimientoController' => $baseDir . '/app/Http/Controllers/MantenimientoController.php',
+    'App\\Http\\Controllers\\MapaController' => $baseDir . '/app/Http/Controllers/MapaController.php',
     'App\\Http\\Controllers\\ParquesController' => $baseDir . '/app/Http/Controllers/ParquesController.php',
     'App\\Http\\Controllers\\UsuariosController' => $baseDir . '/app/Http/Controllers/UsuariosController.php',
     'App\\Http\\Middleware\\CheckApiToken' => $baseDir . '/app/Http/Middleware/CheckApiToken.php',

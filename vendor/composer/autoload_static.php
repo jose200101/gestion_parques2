@@ -530,6 +530,7 @@ class ComposerStaticInit88970a0117c062eed55fa8728fc43833
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\LoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/LoginController.php',
         'App\\Http\\Controllers\\MantenimientoController' => __DIR__ . '/../..' . '/app/Http/Controllers/MantenimientoController.php',
+        'App\\Http\\Controllers\\MapaController' => __DIR__ . '/../..' . '/app/Http/Controllers/MapaController.php',
         'App\\Http\\Controllers\\ParquesController' => __DIR__ . '/../..' . '/app/Http/Controllers/ParquesController.php',
         'App\\Http\\Controllers\\UsuariosController' => __DIR__ . '/../..' . '/app/Http/Controllers/UsuariosController.php',
         'App\\Http\\Middleware\\CheckApiToken' => __DIR__ . '/../..' . '/app/Http/Middleware/CheckApiToken.php',
