@@ -391,11 +391,11 @@ return [
 
         [
             'text' => 'Reportes',
-            'icon' => 'fas fa-fw fa-chart-bar', // He usado un ícono más apropiado para reportes
+            'icon' => 'fas fa-fw fa-chart-bar', //
             'submenu' => [
                 [
                     'text' => 'Reportes Ambientales',
-                    'url' => '/reportes/ambientales',
+                    'url' => '/reportes/eventos-ambientales',
                     'icon' => 'far fa-circle',
                 ],
                 [
