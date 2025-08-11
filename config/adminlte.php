@@ -190,7 +190,9 @@ return [
     |
     */
 
-    'classes_body' => '',
+    //INSERTO CODIGO PARA CUADRAR EL LAYOUT ANDRES
+    'classes_body' => 'layout-fixed sidebar-mini sidebar-collapse',
+    //FIN CODIGO ANDRES
     'classes_brand' => '',
     'classes_brand_text' => '',
     'classes_content_wrapper' => '',
@@ -308,11 +310,151 @@ return [
         'topnav_right' => true,
     ],
     // ------------------------------------
+        // Navbar items:
+        [
+            'type' => 'navbar-search',
+            'text' => 'search',
+            'topnav_right' => true,
+        ],
+        [
+            'type' => 'fullscreen-widget',
+            'topnav_right' => true,
+        ],
+        
+        // --- NUEVA ENTRADA PARA EL BOTÓN DE CERRAR SESIÓN ---
+        [
+            'text' => 'Cerrar Sesión',
+            'url'  => 'logout', // URL de la ruta de logout
+            'icon' => 'fas fa-fw fa-power-off text-danger',
+            'topnav_right' => true,
+        ],
+        // ------------------------------------
         // Sidebar items:
         [
             'type' => 'sidebar-menu-search',
             'text' => 'search',
         ],
+
+        // ANA R. CABRERA - Módulo de Gestión de Parques Forestales
+    [
+        'text' => 'Gestión de Parques',
+        'icon' => 'fas fa-tree',
+        'url'  => '#',
+        'submenu' => [
+            [
+                'text' => 'Listado de Parques',
+                'route' => 'parques.index', // Se cambió 'url' a 'route' para usar la ruta con nombre
+                'icon' => 'fas fa-leaf',
+            ],
+            // Ana R. Cabrera: Nueva opción para subir imágenes/documentos
+            [
+                'text' => 'Subir Documentos',
+                'url'  => 'parques/documentos/create', // Esta sería la nueva ruta
+                'icon' => 'fas fa-upload', // Icono de carga
+            ],
+        ],
+    ],
+
+        
+        
+       [
+           'text' => 'blog',
+           'url' => 'admin/blog',
+           'can' => 'manage-blog',
+       ],
+       [
+           'text' => 'pages',
+           'url' => 'admin/pages',
+           'icon' => 'far fa-fw fa-file',
+           'label' => 4,
+           'label_color' => 'success',
+       ],
+       ['header' => 'account_settings'],
+       [
+           'text' => 'profile',
+           'url' => 'admin/settings',
+           'icon' => 'fas fa-fw fa-user',
+       ],
+       [
+           'text' => 'change_password',
+           'url' => 'admin/settings',
+           'icon' => 'fas fa-fw fa-lock',
+       ],
+       [
+           'text' => 'Reportes',
+           'icon' => 'fas fa-fw fa-chart-bar', // He usado un ícono más apropiado para reportes
+           'submenu' => [
+               [
+                   'text' => 'Reportes Ambientales',
+                   'url' => '/reportes/ambientales',
+                   'icon' => 'far fa-circle',
+               ],
+               [
+                   'text' => 'Reportes de Empleados',
+                   'url' => '/reportes/empleados',
+                   'icon' => 'far fa-circle',
+               ],
+               [
+                   'text' => 'Reportes de Clientes',
+                   'url' => '/reportes/clientes',
+                   'icon' => 'far fa-circle',
+               ],
+               [
+                   'text' => 'Reportes de Recursos del Parque',
+                   'url' => '/reportes/recursos',
+                   'icon' => 'far fa-circle',
+               ],
+               [
+                   'text' => 'Reportes de Eventos Ambientales',
+                   'url' => '/reportes/eventos',
+                   'icon' => 'far fa-circle',
+               ],
+           ],
+       ],
+       [
+    'text' => 'Mantenimientos',
+    'icon' => 'fas fa-tools',
+    'url'  => 'mantenimientos',
+],
+[
+    'text' => 'Recursos',
+    'icon' => 'fas fa-boxes',
+    'url'  => 'recursos',
+],
+       ['header' => 'labels'],
+       [
+           'text' => 'important',
+           'icon_color' => 'red',
+           'url' => '#',
+       ],
+       [
+           'text' => 'warning',
+           'icon_color' => 'yellow',
+           'url' => '#',
+       ],
+       [
+           'text' => 'information',
+           'icon_color' => 'cyan',
+           'url' => '#',
+       ],
+       //AGREGAR CONFIGURACION EN BARRA LATERAL ANDRÉS
+        ['header' => 'CONFIGURACION'],
+        [
+            'text' => 'Panel de Configuracion',
+            'route' => 'configuracion.panel_configuracion',
+            'icon' => 'fas fa-fw fa-sliders-h',
+        ],
+        [
+            'text' => 'Logs del Sistema',
+            'route' => 'configuracion.logs_sistema',
+            'icon' => 'fas fa-fw fa-clipboard-list',
+        ],
+        [
+            'text' => 'Administración de Backups',
+            'route' => 'configuracion.admin_backups',
+            'icon' => 'fas fa-fw fa-database',
+        ],
+        //FIN ANDRES
         [
             'text' => 'blog',
             'url' => 'admin/blog',
@@ -381,12 +523,6 @@ return [
     |--------------------------------------------------------------------------
     | Menu Filters
     |--------------------------------------------------------------------------
-    |
-    | Here we can modify the menu filters of the admin panel.
-    |
-    | For detailed instructions you can look the menu filters section here:
-    | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Menu-Configuration
-    |
     */
 
     'filters' => [
@@ -403,17 +539,12 @@ return [
     |--------------------------------------------------------------------------
     | Plugins Initialization
     |--------------------------------------------------------------------------
-    |
-    | Here we can modify the plugins used inside the admin panel.
-    |
-    | For detailed instructions you can look the plugins section here:
-    | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Plugins-Configuration
-    |
     */
 
+    //SE ACTIVO EL DATATABLES PARA FORMULARIOS AVANZADOS ANDRES
     'plugins' => [
         'Datatables' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
@@ -457,6 +588,23 @@ return [
                 ],
             ],
         ],
+        //AGREGADO NOTIFICACIONES ANDRÉS
+        'Toastr' => [
+        'active' => true,
+        'files' => [
+            [
+                'type' => 'js',
+                'asset' => false,
+                'location' => '//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js',
+            ],
+            [
+                'type' => 'css',
+                'asset' => false,
+                'location' => '//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css',
+            ],
+        ],
+        ],
+        //FIN AGREGADO ANDRES
         'Sweetalert2' => [
             'active' => false,
             'files' => [
