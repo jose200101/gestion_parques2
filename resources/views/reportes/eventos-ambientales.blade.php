@@ -279,16 +279,36 @@
                     return response.json();
                 })
                 .then(data => {
-                    // 1. Destruye la instancia de DataTable si ya existe.
-                    if ($.fn.DataTable.isDataTable('#tabla-eventos')) {
-                        $('#tabla-eventos').DataTable().destroy();
-                    }
-
-                    // 2. Limpia el cuerpo de la tabla.
-                    tableBody.innerHTML = '';
+                    // Actualiza el conteo de logs
                     document.getElementById('logsCount').innerText = data.length;
 
-                    // 3. Llena la tabla con los nuevos datos.
+                    // Si la instancia de DataTable ya existe, la actualizamos; de lo contrario, la inicializamos.
+                    if ($.fn.DataTable.isDataTable('#tabla-eventos')) {
+                        // Limpia los datos existentes
+                        tablaEventos.clear(); 
+                        // Añade las nuevas filas
+                        // Asegúrate de que 'data' sea un array de arrays o un array de objetos
+                        // donde cada objeto tiene las propiedades en el orden de las columnas de la tabla.
+                        // Si 'data' es un array de objetos, DataTables puede mapearlos directamente si las columnas se definen por 'data' propiedad
+                        // En tu caso, estás construyendo el HTML manualmente, así que necesitarás mapear `data`
+                        // a un formato que DataTables pueda añadir directamente si no estás re-inicializando.
+
+                        // Ya que el HTML se construye manualmente por `data.forEach`, 
+                        // volvamos a la lógica de destruir y recrear si el problema persiste,
+                        // o lo mejor es que DataTables reciba los datos como objetos y maneje la renderización
+                        // por sí mismo a través de la opción `columns`.
+
+                        // Por ahora, para una solución más rápida manteniendo tu estructura:
+                        // Destruimos y recreamos la tabla si ya existe, ya que estás generando el tbody manualmente.
+                        // Si en el futuro quieres optimizar, pasarías 'data' directamente a DataTables.
+
+                        $('#tabla-eventos').DataTable().destroy();
+                        tableBody.innerHTML = ''; // Limpia el HTML del cuerpo de la tabla
+                    } else {
+                        tableBody.innerHTML = ''; // Limpia el HTML del cuerpo de la tabla por primera vez
+                    }
+
+                    // Llena la tabla con los nuevos datos (si la tabla ya se destruyó o es la primera carga)
                     data.forEach(log => {
                         const row = document.createElement('tr');
                         row.innerHTML = `
@@ -310,7 +330,7 @@
                         tableBody.appendChild(row);
                     });
 
-                    // 4. Inicializa DataTables con los botones y asigna a la variable global.
+                    // Inicializa DataTables con los botones y asigna a la variable global.
                     tablaEventos = $('#tabla-eventos').DataTable({
                         "responsive": true,
                         "lengthChange": true,
@@ -819,4 +839,5 @@
     });
 </script>
 @stop
+
 

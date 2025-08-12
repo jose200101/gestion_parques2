@@ -191,7 +191,7 @@ return [
     */
 
     //INSERTO CODIGO PARA CUADRAR EL LAYOUT ANDRES
-    'classes_body' => 'layout-fixed sidebar-mini sidebar-collapse',
+    'classes_body' => 'layout-fixed sidebar-mini',
     //FIN CODIGO ANDRES
     'classes_brand' => '',
     'classes_brand_text' => '',
@@ -259,7 +259,7 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => 'home',
+    'dashboard_url' => './',
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register',
@@ -398,26 +398,7 @@ return [
                     'url' => '/reportes/eventos-ambientales',
                     'icon' => 'far fa-circle',
                 ],
-                [
-                    'text' => 'Reportes de Empleados',
-                    'url' => '/reportes/empleados',
-                    'icon' => 'far fa-circle',
-                ],
-                [
-                    'text' => 'Reportes de Clientes',
-                    'url' => '/reportes/clientes',
-                    'icon' => 'far fa-circle',
-                ],
-                [
-                    'text' => 'Reportes de Recursos del Parque',
-                    'url' => '/reportes/recursos',
-                    'icon' => 'far fa-circle',
-                ],
-                [
-                    'text' => 'Reportes de Eventos Ambientales',
-                    'url' => '/reportes/eventos',
-                    'icon' => 'far fa-circle',
-                ],
+                
             ],
         ],
         
