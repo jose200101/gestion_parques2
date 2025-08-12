@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Interactivo</title>
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        function initMap() {
+            const defaultLocation = { lat: 40.4168, lng: -3.7038 }; // Madrid
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 13,
+                center: defaultLocation,
+            });
+
+            map.addListener("click", (mapsMouseEvent) => {
+                if (window.currentMarker) {
+                    window.currentMarker.setMap(null);
+                }
+
+                window.currentMarker = new google.maps.Marker({
+                    position: mapsMouseEvent.latLng,
+                    map,
+                });
+
+                const infoWindow = new google.maps.InfoWindow({
+                    content: JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2),
+                });
+                infoWindow.open(map, window.currentMarker);
+
+                console.log("Coordenadas del clic:", mapsMouseEvent.latLng.toJSON());
+            });
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOqbIiWQnnHaQfH5aUvL0oFwh0JOUaIzw&callback=initMap" async defer></script>
+</body>
+</html>

@@ -596,16 +596,21 @@ class ComposerStaticInit88970a0117c062eed55fa8728fc43833
     );
 
     public static $classMap = array (
+        'App\\Http\\Controllers\\ArchivosController' => __DIR__ . '/../..' . '/app/Http/Controllers/ArchivosController.php',
         'App\\Http\\Controllers\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/AuthController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\EmailController' => __DIR__ . '/../..' . '/app/Http/Controllers/EmailController.php',
         'App\\Http\\Controllers\\EventoAmbientalController' => __DIR__ . '/../..' . '/app/Http/Controllers/EventoAmbientalController.php',
         'App\\Http\\Controllers\\LoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/LoginController.php',
         'App\\Http\\Controllers\\MantenimientoController' => __DIR__ . '/../..' . '/app/Http/Controllers/MantenimientoController.php',
+        'App\\Http\\Controllers\\MapaController' => __DIR__ . '/../..' . '/app/Http/Controllers/MapaController.php',
+        'App\\Http\\Controllers\\ParquesController' => __DIR__ . '/../..' . '/app/Http/Controllers/ParquesController.php',
+        'App\\Http\\Controllers\\MantenimientoController' => __DIR__ . '/../..' . '/app/Http/Controllers/MantenimientoController.php',
         'App\\Http\\Controllers\\ParquesController' => __DIR__ . '/../..' . '/app/Http/Controllers/ParquesController.php',
         'App\\Http\\Controllers\\ReporteController' => __DIR__ . '/../..' . '/app/Http/Controllers/ReporteController.php',
         'App\\Http\\Controllers\\UsuariosController' => __DIR__ . '/../..' . '/app/Http/Controllers/UsuariosController.php',
         'App\\Http\\Middleware\\CheckApiToken' => __DIR__ . '/../..' . '/app/Http/Middleware/CheckApiToken.php',
+        'App\\Models\\Parque' => __DIR__ . '/../..' . '/app/Models/Parque.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',

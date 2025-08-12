@@ -323,7 +323,7 @@ return [
             'url' => 'cambiar-password',
             'icon' => 'fas fa-fw fa-lock',
         ],
-
+     ['header' => 'GESTIÓN DE USUARIOS'],
         [
             'text' => 'Usuarios',
             'url'  => 'usuarios',
@@ -336,7 +336,8 @@ return [
             'icon' => 'fas fa-chart-pie',
         ],
 
-        // ANA R. CABRERA - Módulo de Gestión de Parques Forestales
+     ['header' => 'PARQUES'],
+
     [
         'text' => 'Gestión de Parques',
         'icon' => 'fas fa-tree',
@@ -344,15 +345,21 @@ return [
         'submenu' => [
             [
                 'text' => 'Listado de Parques',
-                'route' => 'parques.index', // Se cambió 'url' a 'route' para usar la ruta con nombre
+                'route' => 'parques.index',
                 'icon' => 'fas fa-leaf',
             ],
             // Ana R. Cabrera: Nueva opción para subir imágenes/documentos
             [
                 'text' => 'Subir Documentos',
-                'url'  => 'parques/documentos/create', // Esta sería la nueva ruta
-                'icon' => 'fas fa-upload', // Icono de carga
+                'route' => 'archivos.create', // Se cambió la 'url' por la 'route' correcta
+                'icon' => 'fas fa-upload',
             ],
+
+            [
+            'text' => 'Localización en mapa',
+            'route' => 'parques.mapa',
+            'icon' => 'fas fa-map-marked-alt',
+        ],
         ],
     ],
        [

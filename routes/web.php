@@ -5,6 +5,8 @@ use App\Http\Controllers\UsuariosController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ParquesController; //Ana R.Cabrera
 use App\Http\Controllers\MantenimientoController;
+use App\Http\Controllers\ArchivosController; // Ana
+use App\Http\Controllers\MapaController; //Ana
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\EventoAmbientalController;
 use App\Http\Controllers\EmailController;
@@ -28,7 +30,20 @@ Route::middleware('api_auth')->group(function () {
     // Rutas para la gestión de usuarios
     Route::get('/usuarios', [UsuariosController::class, 'index'])->name('usuarios.index');
 
-     // ANA R. CABRERA - Usamos 'Route::resource' para todas las rutas del controlador de parques.
+    // Ana R. Cabrera: Rutas para la gestión de archivos.
+    // La ruta GET maneja la visualización del formulario para subir archivos.
+    Route::get('archivos/create', [ArchivosController::class, 'create'])->name('archivos.create');
+
+    // La ruta POST procesa el envío del formulario de archivos y los almacena. Ana R. Cabrera
+    Route::post('archivos', [ArchivosController::class, 'store'])->name('archivos.store');
+
+    // 👇 Aquí se agrega la nueva ruta para el mapa, antes de Route::resource.
+    // Esta ruta redirigirá al archivo HTML del mapa.
+    Route::get('parques/mapa', function () {
+    return redirect('/mapa-final.html');
+    })->name('parques.mapa');
+
+    // Ana R. Cabrera - Usamos 'Route::resource' para todas las rutas del controlador de parques.
     // Esto incluye: index, create, store, show, edit, update, y destroy.
     Route::resource('parques', ParquesController::class);
     
