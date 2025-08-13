@@ -7,7 +7,9 @@ use App\Http\Controllers\ParquesController; //Ana R.Cabrera
 use App\Http\Controllers\MantenimientoController;
 use App\Http\Controllers\ArchivosController; // Ana
 use App\Http\Controllers\MapaController; //Ana
-
+use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\EventoAmbientalController;
+use App\Http\Controllers\EmailController;
 
 // Ruta para mostrar el formulario de login
 // Con el nombre 'login', que es usado por el middleware para las redirecciones
@@ -65,7 +67,11 @@ Route::middleware('api_auth')->group(function () {
     // Rutas para cambio de contraseña
     Route::get('/cambiar-password', [UsuariosController::class, 'mostrarCambioPassword'])->name('usuarios.cambio-password');
     Route::post('/cambiar-password', [UsuariosController::class, 'cambiarPassword'])->name('usuarios.cambiar-password');
-
+    // Jose Reportes 
+    Route::get('/reportes/eventos-ambientales', [ReporteController::class, 'eventosAmbientales'])->name('reportes.eventos');
+    Route::get('/eventos/exportar-pdf', [EventoAmbientalController::class, 'exportarPdf'])->name('eventos.exportar-pdf');
+    //Correo electronico
+    Route::post('/emails/report', [EmailController::class, 'sendReport'])->name('send.report.email');
 });
 
 //RUTAS CONFIGURACION ANDRÉS
