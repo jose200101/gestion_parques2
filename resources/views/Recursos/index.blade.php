@@ -174,6 +174,7 @@ function cargarDatosEditar(r) {
 
 <script>
 // ===== Metodo para "Ocultar" los datos de la tabla =====
+// ===== Se agrega este metodo en vista de que no se cuenta con el PA Delete =====
 function getOcultosRecursos() {
   try {
     const arr = JSON.parse(localStorage.getItem('ocultos_recursos') || '[]');
@@ -425,7 +426,7 @@ function setOcultosRecursos(set) {
   localStorage.setItem('ocultos_recursos', JSON.stringify([...set]));
 }
 function ocultarRecurso(id, btn) {
-  if (!confirm('¿Ocultar este recurso de la lista?')) return;
+  if (!confirm('¿Eliminar este recurso de la lista?')) return;
   const tr = btn.closest('tr');
   if (tr) tr.remove();
   const ocultos = getOcultosRecursos();
