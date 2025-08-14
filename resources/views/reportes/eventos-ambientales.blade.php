@@ -286,22 +286,6 @@
                     if ($.fn.DataTable.isDataTable('#tabla-eventos')) {
                         // Limpia los datos existentes
                         tablaEventos.clear(); 
-                        // Añade las nuevas filas
-                        // Asegúrate de que 'data' sea un array de arrays o un array de objetos
-                        // donde cada objeto tiene las propiedades en el orden de las columnas de la tabla.
-                        // Si 'data' es un array de objetos, DataTables puede mapearlos directamente si las columnas se definen por 'data' propiedad
-                        // En tu caso, estás construyendo el HTML manualmente, así que necesitarás mapear `data`
-                        // a un formato que DataTables pueda añadir directamente si no estás re-inicializando.
-
-                        // Ya que el HTML se construye manualmente por `data.forEach`, 
-                        // volvamos a la lógica de destruir y recrear si el problema persiste,
-                        // o lo mejor es que DataTables reciba los datos como objetos y maneje la renderización
-                        // por sí mismo a través de la opción `columns`.
-
-                        // Por ahora, para una solución más rápida manteniendo tu estructura:
-                        // Destruimos y recreamos la tabla si ya existe, ya que estás generando el tbody manualmente.
-                        // Si en el futuro quieres optimizar, pasarías 'data' directamente a DataTables.
-
                         $('#tabla-eventos').DataTable().destroy();
                         tableBody.innerHTML = ''; // Limpia el HTML del cuerpo de la tabla
                     } else {
@@ -427,7 +411,7 @@
         const codEventoInput = document.getElementById('cod_evento');
 
         function generarCodigoEvento() {
-             fetch(apiURL)
+            fetch(apiURL)
                 .then(response => response.json())
                 .then(data => {
                     if (data.length > 0) {
@@ -550,8 +534,6 @@
             const codEvento = $(this).data('cod-evento');
             
             // Cargar los datos del evento específico desde la API
-            // Nota: Se asume que tu API GET puede filtrar por cod_evento si se lo pasas como query param.
-            // Si no, deberías obtener todos los eventos y buscar el que coincida.
             fetch(`${apiURL}?cod_evento=${codEvento}`) 
                 .then(response => {
                     if (!response.ok) {
@@ -586,7 +568,7 @@
             $('#deleteEventoModal').modal('show'); // Muestra el modal de confirmación
         });
 
-        // Lógica para cargar y seleccionar valores en los selectores del modal de edición
+        // cargar y seleccionar valores en los selectores del modal de edición
         function cargarSelectoresEdit(selectedTipoEvento, selectedParque, selectedEspecie) {
             const selectTipoEvento = $('#edit_cod_tipo_evento');
             const selectParque = $('#edit_cod_parque');
@@ -614,7 +596,7 @@
                 url: apiURLParques, 
                 method: 'GET',
                 success: function(data) {
-                    // Cuidado: Usar selectParque aquí, no `const select = $('#cod_parque');`
+                    
                     selectParque.find('option:not(:first)').remove(); 
                     data.forEach(item => {
                         selectParque.append(`<option value="${item.cod_parque}">${item.nombre_parque}</option>`);
@@ -725,7 +707,7 @@
             })
             .then(result => {
                 // Ahora, tanto el mensaje de éxito como el de "no encontrado" vienen como 200 OK.
-                if (result.error) { // Si el backend marcó un "error: true" incluso con 200 OK
+                if (result.error) { 
                     toastr.error(result.respuesta, 'Error');
                 } else {
                     toastr.success(result.respuesta || 'Registro eliminado correctamente.', 'Éxito');
